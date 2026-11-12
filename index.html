@@ -35,25 +35,18 @@
         body { font-family: 'Inter', sans-serif; -webkit-tap-highlight-color: transparent; }
         .tab-content { display: none; }
         .tab-content.active { display: block; }
-        @media print {
-            .no-print { display: none !important; }
-            body { background: white !important; }
-        }
-        /* Esconder barra de rolagem no menu superior */
         .no-scrollbar::-webkit-scrollbar { display: none; }
         .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
     </style>
 </head>
 <body class="bg-slate-50/70 text-slate-800 min-h-screen flex flex-col pb-20 md:pb-0">
 
-    <!-- STREAMING_CHUNK:Configuring Toast Notification System... -->
     <!-- Toast de Notificações -->
     <div id="toast" class="fixed top-4 right-4 z-50 transform translate-y-[-200%] transition-transform duration-300 bg-slate-900 text-white px-4 py-3 rounded-2xl shadow-xl flex items-center space-x-2.5 text-xs font-medium">
         <i id="toast-icon" class="fa-solid fa-circle-check text-derm-500 text-sm"></i>
         <span id="toast-msg">Operação realizada com sucesso!</span>
     </div>
 
-    <!-- STREAMING_CHUNK:Rendering Clean Header... -->
     <!-- Cabeçalho Institucional Clean -->
     <header class="bg-white border-b border-slate-100 px-4 py-3.5 sticky top-0 z-30 shadow-xs flex items-center justify-between">
         <div class="flex items-center space-x-3">
@@ -62,7 +55,7 @@
             </div>
             <div>
                 <h1 class="font-bold text-sm tracking-tight text-slate-900">Dra. Andréia Fogaça</h1>
-                <p class="text-[10px] uppercase font-semibold text-derm-600 tracking-wider">Dermatologia & Gestão</p>
+                <p class="text-[10px] uppercase font-semibold text-derm-600 tracking-wider">Dermatologia & Gestão Executiva</p>
             </div>
         </div>
         <div class="flex items-center space-x-2">
@@ -76,17 +69,20 @@
         </div>
     </header>
 
-    <!-- STREAMING_CHUNK:Building Navigation Tabs... -->
-    <!-- Navegação por Abas Limpa -->
+    <!-- Navegação por Abas -->
     <nav class="bg-white/80 backdrop-blur-md border-b border-slate-100 sticky top-[69px] z-20 shadow-2xs overflow-x-auto no-scrollbar">
         <div class="flex max-w-7xl mx-auto px-4 space-x-2 py-2 min-w-max">
             <button onclick="switchTab('dashboard')" id="btn-dashboard" class="tab-btn px-4 py-2 rounded-xl text-xs font-semibold transition-all bg-derm-650 text-white shadow-xs flex items-center space-x-2">
                 <i class="fa-solid fa-chart-pie"></i>
-                <span>Dashboard & Gerência</span>
+                <span>Dashboard & DRE</span>
             </button>
             <button onclick="switchTab('atendimentos')" id="btn-atendimentos" class="tab-btn px-4 py-2 rounded-xl text-xs font-semibold transition-all bg-slate-100 text-slate-600 hover:bg-slate-200 flex items-center space-x-2">
                 <i class="fa-solid fa-clipboard-user"></i>
-                <span>Atendimentos & Caixa</span>
+                <span>Atendimentos & Comissões</span>
+            </button>
+            <button onclick="switchTab('prontuario')" id="btn-prontuario" class="tab-btn px-4 py-2 rounded-xl text-xs font-semibold transition-all bg-slate-100 text-slate-600 hover:bg-slate-200 flex items-center space-x-2">
+                <i class="fa-solid fa-microphone-lines"></i>
+                <span>Prontuário & Voz IA</span>
             </button>
             <button onclick="switchTab('contas')" id="btn-contas" class="tab-btn px-4 py-2 rounded-xl text-xs font-semibold transition-all bg-slate-100 text-slate-600 hover:bg-slate-200 flex items-center space-x-2">
                 <i class="fa-solid fa-wallet"></i>
@@ -99,31 +95,27 @@
         </div>
     </nav>
 
-    <!-- STREAMING_CHUNK:Constructing Main Container... -->
     <!-- Conteúdo Principal -->
     <main class="flex-1 max-w-7xl w-full mx-auto p-4 md:p-6 space-y-6">
 
-        <!-- ================= ABA 1: DASHBOARD & GERÊNCIA ================= -->
+        <!-- ================= ABA 1: DASHBOARD & DRE ================= -->
         <section id="tab-dashboard" class="tab-content active space-y-6">
-            
-            <!-- Filtro de Ano Global -->
             <div class="bg-white p-4 rounded-2xl border border-slate-100 shadow-2xs flex flex-col sm:flex-row items-center justify-between gap-3">
                 <div class="flex items-center space-x-2 text-xs font-semibold text-slate-700">
                     <i class="fa-solid fa-calendar-days text-derm-650 text-base"></i>
-                    <span>Ano de Análise Gerencial:</span>
+                    <span>Ano de Análise Gerencial (CFO):</span>
                 </div>
                 <select id="filtro-ano" onchange="atualizarSistema()" class="px-4 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs font-bold text-slate-800 focus:outline-none focus:border-derm-500">
-                    <!-- Preenchido dinamicamente -->
                 </select>
             </div>
 
-            <!-- Cards Resumo Anual/Geral -->
+            <!-- Cards Resumo -->
             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
                 <div class="bg-white p-5 rounded-2xl border border-slate-100 shadow-2xs flex items-center justify-between">
                     <div>
                         <p class="text-[11px] font-semibold text-slate-400 uppercase tracking-wider">Faturamento Bruto</p>
                         <h3 id="card-faturamento" class="text-xl font-bold text-slate-900 mt-1">R$ 0,00</h3>
-                        <span class="text-[10px] text-derm-650 font-medium flex items-center mt-1"><i class="fa-solid fa-arrow-trend-up mr-1"></i> No ano selecionado</span>
+                        <span class="text-[10px] text-derm-650 font-medium flex items-center mt-1"><i class="fa-solid fa-arrow-trend-up mr-1"></i> Bruto consolidado</span>
                     </div>
                     <div class="w-11 h-11 rounded-xl bg-derm-50 text-derm-650 flex items-center justify-center text-lg shadow-2xs">
                         <i class="fa-solid fa-chart-line"></i>
@@ -132,9 +124,9 @@
 
                 <div class="bg-white p-5 rounded-2xl border border-slate-100 shadow-2xs flex items-center justify-between">
                     <div>
-                        <p class="text-[11px] font-semibold text-slate-400 uppercase tracking-wider">Lucro Líquido</p>
+                        <p class="text-[11px] font-semibold text-slate-400 uppercase tracking-wider">Lucro Líquido Real</p>
                         <h3 id="card-lucro" class="text-xl font-bold text-emerald-600 mt-1">R$ 0,00</h3>
-                        <span class="text-[10px] text-emerald-600 font-medium flex items-center mt-1"><i class="fa-solid fa-piggy-bank mr-1"></i> Caixa operacional livre</span>
+                        <span class="text-[10px] text-emerald-600 font-medium flex items-center mt-1"><i class="fa-solid fa-piggy-bank mr-1"></i> Após impostos, comissões e despesas</span>
                     </div>
                     <div class="w-11 h-11 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center text-lg shadow-2xs">
                         <i class="fa-solid fa-wallet"></i>
@@ -143,20 +135,20 @@
 
                 <div class="bg-white p-5 rounded-2xl border border-slate-100 shadow-2xs flex items-center justify-between">
                     <div>
-                        <p class="text-[11px] font-semibold text-slate-400 uppercase tracking-wider">Contas Pendentes</p>
-                        <h3 id="card-contas" class="text-xl font-bold text-rose-500 mt-1">R$ 0,00</h3>
-                        <span class="text-[10px] text-slate-400 font-medium flex items-center mt-1"><i class="fa-solid fa-file-invoice mr-1"></i> A pagar em aberto</span>
+                        <p class="text-[11px] font-semibold text-slate-400 uppercase tracking-wider">Comissões Esteticistas</p>
+                        <h3 id="card-comissoes" class="text-xl font-bold text-amber-600 mt-1">R$ 0,00</h3>
+                        <span class="text-[10px] text-slate-400 font-medium flex items-center mt-1"><i class="fa-solid fa-hand-holding-dollar mr-1"></i> Repasses calculados</span>
                     </div>
-                    <div class="w-11 h-11 rounded-xl bg-rose-50 text-rose-500 flex items-center justify-center text-lg shadow-2xs">
-                        <i class="fa-solid fa-file-invoice-dollar"></i>
+                    <div class="w-11 h-11 rounded-xl bg-amber-50 text-amber-600 flex items-center justify-center text-lg shadow-2xs">
+                        <i class="fa-solid fa-percent"></i>
                     </div>
                 </div>
 
                 <div class="bg-white p-5 rounded-2xl border border-slate-100 shadow-2xs flex items-center justify-between">
                     <div>
-                        <p class="text-[11px] font-semibold text-slate-400 uppercase tracking-wider">Consultas no Ano</p>
+                        <p class="text-[11px] font-semibold text-slate-400 uppercase tracking-wider">Total de Atendimentos</p>
                         <h3 id="card-pacientes" class="text-xl font-bold text-slate-900 mt-1">0</h3>
-                        <span class="text-[10px] text-derm-650 font-medium flex items-center mt-1"><i class="fa-solid fa-users mr-1"></i> Total de atendimentos</span>
+                        <span class="text-[10px] text-derm-650 font-medium flex items-center mt-1"><i class="fa-solid fa-users mr-1"></i> Procedimentos executados</span>
                     </div>
                     <div class="w-11 h-11 rounded-xl bg-teal-50 text-teal-700 flex items-center justify-center text-lg shadow-2xs">
                         <i class="fa-solid fa-stethoscope"></i>
@@ -164,96 +156,42 @@
                 </div>
             </div>
 
-            <!-- Mini DRE Consolidada -->
+            <!-- Mini DRE Gerencial Consolidada -->
             <div class="bg-white rounded-2xl border border-slate-100 shadow-2xs p-5">
                 <div class="flex items-center justify-between mb-4 pb-3 border-b border-slate-100">
                     <div class="flex items-center space-x-2">
                         <div class="w-8 h-8 rounded-lg bg-derm-50 text-derm-650 flex items-center justify-center font-bold text-xs">
                             <i class="fa-solid fa-file-invoice"></i>
                         </div>
-                        <h3 class="font-bold text-slate-900 text-sm">Mini DRE Gerencial</h3>
+                        <h3 class="font-bold text-slate-900 text-sm">Mini DRE Executiva</h3>
                     </div>
-                    <span class="text-[11px] bg-slate-100 text-slate-600 px-2.5 py-1 rounded-lg font-medium">Demonstrativo de Resultado</span>
+                    <span class="text-[11px] bg-slate-100 text-slate-600 px-2.5 py-1 rounded-lg font-medium">Demonstrativo de Resultado Oficial</span>
                 </div>
 
-                <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-5 gap-3 text-center">
+                <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-6 gap-3 text-center">
                     <div class="p-3 bg-slate-50 rounded-xl border border-slate-100">
-                        <span class="text-[10px] text-slate-400 block uppercase font-semibold">(=) Receita Bruta</span>
+                        <span class="text-[10px] text-slate-400 block uppercase font-semibold">(=) Bruto Total</span>
                         <span id="dre-bruta" class="text-sm font-bold text-slate-900 mt-1 block">R$ 0,00</span>
+                    </div>
+                    <div class="p-3 bg-slate-50 rounded-xl border border-slate-100">
+                        <span class="text-[10px] text-slate-400 block uppercase font-semibold">(-) Descontos</span>
+                        <span id="dre-descontos" class="text-sm font-bold text-rose-500 mt-1 block">- R$ 0,00</span>
                     </div>
                     <div class="p-3 bg-slate-50 rounded-xl border border-slate-100">
                         <span class="text-[10px] text-slate-400 block uppercase font-semibold">(-) Impostos (8%)</span>
                         <span id="dre-impostos" class="text-sm font-bold text-rose-500 mt-1 block">- R$ 0,00</span>
                     </div>
                     <div class="p-3 bg-slate-50 rounded-xl border border-slate-100">
-                        <span class="text-[10px] text-slate-400 block uppercase font-semibold">(=) Receita Líquida</span>
-                        <span id="dre-liquida" class="text-sm font-bold text-derm-650 mt-1 block">R$ 0,00</span>
+                        <span class="text-[10px] text-slate-400 block uppercase font-semibold">(-) Comissões</span>
+                        <span id="dre-comissoes-val" class="text-sm font-bold text-amber-600 mt-1 block">- R$ 0,00</span>
                     </div>
                     <div class="p-3 bg-slate-50 rounded-xl border border-slate-100">
-                        <span class="text-[10px] text-slate-400 block uppercase font-semibold">(-) Despesas Pagas</span>
+                        <span class="text-[10px] text-slate-400 block uppercase font-semibold">(-) Despesas/Contas</span>
                         <span id="dre-despesas" class="text-sm font-bold text-rose-500 mt-1 block">- R$ 0,00</span>
                     </div>
-                    <div class="p-3 bg-derm-50 rounded-xl border border-derm-100 sm:col-span-2 md:col-span-1">
-                        <span class="text-[10px] text-derm-900 block uppercase font-bold">(=) Lucro Líquido Final</span>
+                    <div class="p-3 bg-derm-50 rounded-xl border border-derm-100">
+                        <span class="text-[10px] text-derm-900 block uppercase font-bold">(=) Lucro Líquido</span>
                         <span id="dre-lucro" class="text-sm font-extrabold text-emerald-600 mt-1 block">R$ 0,00</span>
-                    </div>
-                </div>
-            </div>
-
-            <!-- STREAMING_CHUNK:Adding Advanced Analytics Reports... -->
-            <!-- Relatórios Gerenciais: Frequência de Pacientes & Procedimentos Mais Realizados -->
-            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                <!-- Ranking de Procedimentos Mais Realizados -->
-                <div class="bg-white rounded-2xl border border-slate-100 shadow-2xs p-5 flex flex-col justify-between">
-                    <div>
-                        <div class="flex items-center justify-between mb-4">
-                            <h3 class="font-bold text-slate-900 text-sm flex items-center space-x-2">
-                                <i class="fa-solid fa-ranking-star text-derm-650"></i>
-                                <span>Procedimentos Mais Realizados no Ano</span>
-                            </h3>
-                            <span class="text-[10px] font-semibold bg-slate-100 text-slate-600 px-2 py-0.5 rounded-md">Demanda</span>
-                        </div>
-                        <div class="overflow-x-auto max-h-60 overflow-y-auto">
-                            <table class="w-full text-left text-xs">
-                                <thead>
-                                    <tr class="border-b border-slate-100 text-slate-400 uppercase text-[10px]">
-                                        <th class="py-2 px-2">Procedimento</th>
-                                        <th class="py-2 px-2 text-center">Qtd. Realizada</th>
-                                        <th class="py-2 px-2 text-right">Faturamento</th>
-                                    </tr>
-                                </thead>
-                                <tbody id="tabela-ranking-procedimentos" class="divide-y divide-slate-50">
-                                    <!-- Preenchido via JS -->
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Histórico e Frequência de Pacientes no Ano -->
-                <div class="bg-white rounded-2xl border border-slate-100 shadow-2xs p-5 flex flex-col justify-between">
-                    <div>
-                        <div class="flex items-center justify-between mb-4">
-                            <h3 class="font-bold text-slate-900 text-sm flex items-center space-x-2">
-                                <i class="fa-solid fa-user-clock text-derm-650"></i>
-                                <span>Frequência de Pacientes (Visitas no Ano)</span>
-                            </h3>
-                            <span class="text-[10px] font-semibold bg-slate-100 text-slate-600 px-2 py-0.5 rounded-md">Retenção</span>
-                        </div>
-                        <div class="overflow-x-auto max-h-60 overflow-y-auto">
-                            <table class="w-full text-left text-xs">
-                                <thead>
-                                    <tr class="border-b border-slate-100 text-slate-400 uppercase text-[10px]">
-                                        <th class="py-2 px-2">Paciente</th>
-                                        <th class="py-2 px-2 text-center">Visitas</th>
-                                        <th class="py-2 px-2 text-right">Total Investido</th>
-                                    </tr>
-                                </thead>
-                                <tbody id="tabela-frequencia-pacientes" class="divide-y divide-slate-50">
-                                    <!-- Preenchido via JS -->
-                                </tbody>
-                            </table>
-                        </div>
                     </div>
                 </div>
             </div>
@@ -271,10 +209,11 @@
             </div>
         </section>
 
-        <!-- ================= ABA 2: ATENDIMENTOS & CAIXA ================= -->
+        <!-- ================= ABA 2: ATENDIMENTOS & COMISSÕES ================= -->
         <section id="tab-atendimentos" class="tab-content hidden space-y-6">
             <div class="bg-white rounded-2xl border border-slate-100 shadow-2xs p-5">
-                <h3 class="font-bold text-slate-900 text-base mb-4">Registrar Atendimento com Múltiplos Procedimentos</h3>
+                <h3 class="font-bold text-slate-900 text-base mb-1">Lançamento Rápido de Atendimentos</h3>
+                <p class="text-xs text-slate-500 mb-4">Adicione os procedimentos (Botox, Preenchimento, Laser), informe descontos e configure a comissão da esteticista.</p>
                 
                 <form id="form-atendimento" onsubmit="salvarAtendimento(event)" class="space-y-4">
                     <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
@@ -284,7 +223,7 @@
                         </div>
                         <div>
                             <label class="block text-xs font-semibold text-slate-500 uppercase mb-1">Nome do Paciente</label>
-                            <input type="text" id="at-paciente" placeholder="Ex: Juliana Costa" required class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs focus:outline-none focus:border-derm-500">
+                            <input type="text" id="at-paciente" placeholder="Ex: Mariana Costa" required class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs focus:outline-none focus:border-derm-500">
                         </div>
                         <div>
                             <label class="block text-xs font-semibold text-slate-500 uppercase mb-1">Forma de Pagamento</label>
@@ -298,10 +237,10 @@
                         </div>
                     </div>
 
-                    <!-- Seção Dinâmica de Procedimentos -->
+                    <!-- Seção de Procedimentos Dinâmicos -->
                     <div class="border-t border-slate-100 pt-4">
                         <div class="flex items-center justify-between mb-3">
-                            <span class="text-xs font-bold text-slate-700 uppercase tracking-wide">Procedimentos Realizados</span>
+                            <span class="text-xs font-bold text-slate-700 uppercase tracking-wide">Procedimentos Realizados (Botox, Preenchimento, Laser...)</span>
                             <button type="button" onclick="adicionarLinhaProcedimento()" class="bg-derm-50 text-derm-700 hover:bg-derm-100 font-semibold px-3 py-1.5 rounded-xl text-xs flex items-center space-x-1.5 transition-all">
                                 <i class="fa-solid fa-plus text-[10px]"></i>
                                 <span>Adicionar Procedimento</span>
@@ -309,19 +248,25 @@
                         </div>
 
                         <div id="lista-procedimentos-container" class="space-y-3">
-                            <!-- Linhas inseridas via JS -->
+                            <!-- Inserido dinamicamente via JS -->
                         </div>
 
-                        <div class="mt-4 flex items-center justify-between bg-slate-50 p-3.5 rounded-xl border border-slate-200">
-                            <span class="text-xs font-bold text-slate-600 uppercase">Valor Total do Atendimento:</span>
-                            <span id="at-total-calculado" class="text-base font-bold text-emerald-600">R$ 0,00</span>
+                        <div class="mt-4 grid grid-cols-1 sm:grid-cols-2 gap-4 bg-slate-50 p-4 rounded-xl border border-slate-200">
+                            <div>
+                                <label class="block text-[11px] font-semibold text-slate-500 uppercase mb-1">Desconto Aplicado no Atendimento (R$)</label>
+                                <input type="number" step="0.01" id="at-desconto" value="0.00" oninput="calcularTotalFormulario()" class="w-full px-3 py-2 bg-white border border-slate-200 rounded-lg text-xs">
+                            </div>
+                            <div class="flex flex-col justify-between items-end">
+                                <span class="text-xs font-bold text-slate-600 uppercase">Valor Líquido Final:</span>
+                                <span id="at-total-calculado" class="text-lg font-extrabold text-emerald-600">R$ 0,00</span>
+                            </div>
                         </div>
                     </div>
 
                     <div class="flex justify-end pt-2">
                         <button type="submit" class="bg-derm-650 hover:bg-derm-700 text-white font-semibold py-2.5 px-6 rounded-xl text-xs transition-all shadow-xs flex items-center space-x-2">
                             <i class="fa-solid fa-check text-[10px]"></i>
-                            <span>Salvar Atendimento</span>
+                            <span>Salvar Atendimento no Histórico</span>
                         </button>
                     </div>
                 </form>
@@ -339,9 +284,9 @@
                             <tr class="bg-slate-50/70 border-b border-slate-100 text-[11px] font-semibold text-slate-400 uppercase">
                                 <th class="py-3 px-4">Data</th>
                                 <th class="py-3 px-4">Paciente</th>
-                                <th class="py-3 px-4">Procedimentos Realizados</th>
+                                <th class="py-3 px-4">Procedimentos & Detalhes</th>
                                 <th class="py-3 px-4">Pagamento</th>
-                                <th class="py-3 px-4 text-right">Valor Total</th>
+                                <th class="py-3 px-4 text-right">Valor Líquido</th>
                                 <th class="py-3 px-4 text-center">Ações</th>
                             </tr>
                         </thead>
@@ -351,35 +296,87 @@
             </div>
         </section>
 
-        <!-- ================= ABA 3: CONTAS A PAGAR ================= -->
+        <!-- ================= ABA 3: PRONTUÁRIO & VOZ IA ================= -->
+        <section id="tab-prontuario" class="tab-content hidden space-y-6">
+            <div class="bg-white rounded-2xl border border-slate-100 shadow-2xs p-5 space-y-4">
+                <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 pb-3 border-b border-slate-100">
+                    <div>
+                        <h3 class="font-bold text-slate-900 text-base">Prontuário Eletrônico com Inteligência Artificial (Voz)</h3>
+                        <p class="text-xs text-slate-500">Clique no microfone e dite a evolução da paciente no padrão SOAP.</p>
+                    </div>
+                    <button type="button" onclick="toggleReconhecimentoVoz()" id="btn-voz" class="bg-derm-50 text-derm-700 hover:bg-derm-100 px-4 py-2.5 rounded-xl text-xs font-bold flex items-center space-x-2 transition-all border border-derm-100">
+                        <i class="fa-solid fa-microphone text-sm" id="mic-icon"></i>
+                        <span id="mic-text">Iniciar Ditado por Voz</span>
+                    </button>
+                </div>
+
+                <form id="form-prontuario" onsubmit="salvarProntuario(event)" class="space-y-4">
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-xs font-semibold text-slate-500 uppercase mb-1">Nome da Paciente</label>
+                            <input type="text" id="pr-paciente" required placeholder="Ex: Mariana Costa" class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-semibold text-slate-500 uppercase mb-1">Data do Atendimento</label>
+                            <input type="date" id="pr-data" required class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs">
+                        </div>
+                    </div>
+
+                    <!-- Padrão SOAP -->
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-xs font-semibold text-slate-600 uppercase mb-1">Subjetivo (S) - Queixas e Relatos</label>
+                            <textarea id="pr-subjetivo" rows="3" placeholder="Ex: Paciente relata incômodo com linhas de expressão na testa..." class="w-full p-3 bg-slate-50 border border-slate-200 rounded-xl text-xs focus:outline-none focus:border-derm-500"></textarea>
+                        </div>
+                        <div>
+                            <label class="block text-xs font-semibold text-slate-600 uppercase mb-1">Objetivo (O) - Exame Físico / Avaliação</label>
+                            <textarea id="pr-objetivo" rows="3" placeholder="Ex: Dinâmica muscular preservada, boa elasticidade cutânea..." class="w-full p-3 bg-slate-50 border border-slate-200 rounded-xl text-xs focus:outline-none focus:border-derm-500"></textarea>
+                        </div>
+                        <div>
+                            <label class="block text-xs font-semibold text-slate-600 uppercase mb-1">Avaliação (A) - Diagnóstico / Conduta</label>
+                            <textarea id="pr-avaliacao" rows="3" placeholder="Ex: Indicado toxina botulínica preventiva no terço superior..." class="w-full p-3 bg-slate-50 border border-slate-200 rounded-xl text-xs focus:outline-none focus:border-derm-500"></textarea>
+                        </div>
+                        <div>
+                            <label class="block text-xs font-semibold text-slate-600 uppercase mb-1">Plano (P) - Prescrição e Retorno</label>
+                            <textarea id="pr-plano" rows="3" placeholder="Ex: Aplicado 35U de toxina. Retorno agendado para 15 dias..." class="w-full p-3 bg-slate-50 border border-slate-200 rounded-xl text-xs focus:outline-none focus:border-derm-500"></textarea>
+                        </div>
+                    </div>
+
+                    <div class="flex justify-end pt-2">
+                        <button type="submit" class="bg-derm-650 hover:bg-derm-700 text-white font-semibold py-2.5 px-6 rounded-xl text-xs transition-all shadow-xs">
+                            Assinar e Salvar Prontuário
+                        </button>
+                    </div>
+                </form>
+            </div>
+
+            <!-- Histórico de Prontuários -->
+            <div class="bg-white rounded-2xl border border-slate-100 shadow-2xs p-5 space-y-4">
+                <h3 class="font-bold text-slate-900 text-sm">Histórico de Prontuários Salvos</h3>
+                <div id="lista-prontuarios" class="space-y-3"></div>
+            </div>
+        </section>
+
+        <!-- ================= ABA 4: CONTAS A PAGAR ================= -->
         <section id="tab-contas" class="tab-content hidden space-y-6">
             <div class="bg-white rounded-2xl border border-slate-100 shadow-2xs p-5">
-                <h3 class="font-bold text-slate-900 text-base mb-4">Registrar Conta a Pagar</h3>
+                <h3 class="font-bold text-slate-900 text-base mb-4">Registrar Conta ou Despesa da Clínica</h3>
                 <form id="form-conta" onsubmit="salvarConta(event)" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
                     <div class="sm:col-span-2">
                         <label class="block text-xs font-semibold text-slate-500 uppercase mb-1">Descrição / Fornecedor</label>
-                        <input type="text" id="ct-descricao" placeholder="Ex: Aluguel da Sala / Insumos" required class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs focus:outline-none">
+                        <input type="text" id="ct-descricao" placeholder="Ex: Insumos, Aluguel, Toxina" required class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs">
                     </div>
                     <div>
                         <label class="block text-xs font-semibold text-slate-500 uppercase mb-1">Vencimento</label>
-                        <input type="date" id="ct-vencimento" required class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs focus:outline-none">
+                        <input type="date" id="ct-vencimento" required class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs">
                     </div>
                     <div>
                         <label class="block text-xs font-semibold text-slate-500 uppercase mb-1">Valor (R$)</label>
-                        <input type="number" step="0.01" id="ct-valor" placeholder="0,00" required class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs focus:outline-none">
-                    </div>
-                    <div>
-                        <label class="block text-xs font-semibold text-slate-500 uppercase mb-1">Categoria</label>
-                        <select id="ct-categoria" class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs focus:outline-none">
-                            <option value="Estrutura (Aluguel/Luz/Água)">Estrutura (Aluguel/Luz/Água)</option>
-                            <option value="Insumos Médicos">Insumos Médicos</option>
-                            <option value="Impostos & Taxas">Impostos & Taxas</option>
-                            <option value="Serviços">Serviços</option>
-                        </select>
+                        <input type="number" step="0.01" id="ct-valor" placeholder="0,00" required class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs">
                     </div>
                     <div>
                         <label class="block text-xs font-semibold text-slate-500 uppercase mb-1">Status</label>
-                        <select id="ct-status" class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs focus:outline-none">
+                        <select id="ct-status" class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs">
                             <option value="Pendente">Pendente</option>
                             <option value="Pago">Pago</option>
                         </select>
@@ -392,18 +389,13 @@
                 </form>
             </div>
 
-            <!-- Tabela Contas -->
             <div class="bg-white rounded-2xl border border-slate-100 shadow-2xs overflow-hidden">
-                <div class="p-4 border-b border-slate-100">
-                    <input type="text" id="search-conta" onkeyup="renderContas()" placeholder="Buscar conta..." class="w-full sm:w-72 px-3.5 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs focus:outline-none">
-                </div>
                 <div class="overflow-x-auto">
                     <table class="w-full text-left border-collapse">
                         <thead>
                             <tr class="bg-slate-50/70 border-b border-slate-100 text-[11px] font-semibold text-slate-400 uppercase">
                                 <th class="py-3 px-4">Vencimento</th>
                                 <th class="py-3 px-4">Descrição</th>
-                                <th class="py-3 px-4">Categoria</th>
                                 <th class="py-3 px-4 text-right">Valor</th>
                                 <th class="py-3 px-4 text-center">Status</th>
                                 <th class="py-3 px-4 text-center">Ações</th>
@@ -415,7 +407,7 @@
             </div>
         </section>
 
-        <!-- ================= ABA 4: FLUXO DIÁRIO ================= -->
+        <!-- ================= ABA 5: FECHAMENTO DIÁRIO ================= -->
         <section id="tab-fluxo" class="tab-content hidden space-y-6">
             <div class="bg-white rounded-2xl border border-slate-100 shadow-2xs p-5 space-y-5">
                 <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 pb-4 border-b border-slate-100">
@@ -423,27 +415,12 @@
                     <input type="date" id="fluxo-data" onchange="renderFluxoDiario()" class="px-3.5 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs font-medium">
                 </div>
 
-                <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3">
-                    <div class="bg-slate-50 p-3.5 rounded-xl border border-slate-100">
-                        <span class="text-[10px] text-slate-400 font-semibold uppercase">Pix</span>
-                        <h4 id="fx-pix" class="text-base font-bold text-slate-900 mt-1">R$ 0,00</h4>
-                    </div>
-                    <div class="bg-slate-50 p-3.5 rounded-xl border border-slate-100">
-                        <span class="text-[10px] text-slate-400 font-semibold uppercase">Cartão Crédito</span>
-                        <h4 id="fx-credito" class="text-base font-bold text-slate-900 mt-1">R$ 0,00</h4>
-                    </div>
-                    <div class="bg-slate-50 p-3.5 rounded-xl border border-slate-100">
-                        <span class="text-[10px] text-slate-400 font-semibold uppercase">Cartão Débito</span>
-                        <h4 id="fx-debito" class="text-base font-bold text-slate-900 mt-1">R$ 0,00</h4>
-                    </div>
-                    <div class="bg-slate-50 p-3.5 rounded-xl border border-slate-100">
-                        <span class="text-[10px] text-slate-400 font-semibold uppercase">Dinheiro</span>
-                        <h4 id="fx-dinheiro" class="text-base font-bold text-slate-900 mt-1">R$ 0,00</h4>
-                    </div>
-                    <div class="bg-slate-50 p-3.5 rounded-xl border border-slate-100 col-span-2 sm:col-span-1">
-                        <span class="text-[10px] text-slate-400 font-semibold uppercase">Convênio</span>
-                        <h4 id="fx-convenio" class="text-base font-bold text-slate-900 mt-1">R$ 0,00</h4>
-                    </div>
+                <div class="grid grid-cols-2 sm:grid-cols-5 gap-3">
+                    <div class="bg-slate-50 p-3.5 rounded-xl border border-slate-100"><span class="text-[10px] text-slate-400 uppercase font-semibold">Pix</span><h4 id="fx-pix" class="text-base font-bold text-slate-900 mt-1">R$ 0,00</h4></div>
+                    <div class="bg-slate-50 p-3.5 rounded-xl border border-slate-100"><span class="text-[10px] text-slate-400 uppercase font-semibold">Crédito</span><h4 id="fx-credito" class="text-base font-bold text-slate-900 mt-1">R$ 0,00</h4></div>
+                    <div class="bg-slate-50 p-3.5 rounded-xl border border-slate-100"><span class="text-[10px] text-slate-400 uppercase font-semibold">Débito</span><h4 id="fx-debito" class="text-base font-bold text-slate-900 mt-1">R$ 0,00</h4></div>
+                    <div class="bg-slate-50 p-3.5 rounded-xl border border-slate-100"><span class="text-[10px] text-slate-400 uppercase font-semibold">Dinheiro</span><h4 id="fx-dinheiro" class="text-base font-bold text-slate-900 mt-1">R$ 0,00</h4></div>
+                    <div class="bg-slate-50 p-3.5 rounded-xl border border-slate-100 col-span-2 sm:col-span-1"><span class="text-[10px] text-slate-400 uppercase font-semibold">Convênio</span><h4 id="fx-convenio" class="text-base font-bold text-slate-900 mt-1">R$ 0,00</h4></div>
                 </div>
 
                 <div class="bg-derm-650 text-white p-5 rounded-2xl flex items-center justify-between shadow-xs">
@@ -451,16 +428,14 @@
                         <span class="text-[11px] uppercase tracking-wider font-medium text-teal-100">Total Arrecadado no Dia</span>
                         <h3 id="fx-total" class="text-xl font-bold mt-1">R$ 0,00</h3>
                     </div>
-                    <div class="w-12 h-12 rounded-xl bg-white/10 flex items-center justify-center text-xl">
-                        <i class="fa-solid fa-vault"></i>
-                    </div>
+                    <div class="w-12 h-12 rounded-xl bg-white/10 flex items-center justify-center text-xl"><i class="fa-solid fa-vault"></i></div>
                 </div>
             </div>
         </section>
 
     </main>
 
-    <!-- Modal Compartilhamento WhatsApp -->
+    <!-- Modal WhatsApp -->
     <div id="modal-whatsapp" class="fixed inset-0 bg-slate-900/60 backdrop-blur-2xs z-50 hidden flex items-center justify-center p-4">
         <div class="bg-white rounded-2xl max-w-md w-full p-6 shadow-xl space-y-4">
             <div class="flex items-center justify-between pb-3 border-b border-slate-100">
@@ -475,110 +450,93 @@
         </div>
     </div>
 
-    <!-- STREAMING_CHUNK:Implementing Robust Application Logic... -->
-    <!-- Script de Gestão Robusto -->
+    <!-- Script de Gestão CFO & Operacional -->
     <script>
         const hojeIso = new Date().toISOString().split('T')[0];
         const anoAtualStr = new Date().getFullYear().toString();
         
         let atendimentos = JSON.parse(localStorage.getItem('af_atendimentos')) || [
-            { id: 1, data: hojeIso, paciente: 'Juliana Costa', procedimentos: [{ nome: 'Consulta Dermatológica', valor: 450.00 }, { nome: 'Aplicação de Toxina', valor: 1200.00 }], pagamento: 'Pix' },
-            { id: 2, data: hojeIso, paciente: 'Marcos Vinicius', procedimentos: [{ nome: 'Retirada de Lesão', valor: 600.00 }], pagamento: 'Cartão de Crédito' },
-            { id: 3, data: '2025-05-12', paciente: 'Juliana Costa', procedimentos: [{ nome: 'Consulta Dermatológica', valor: 450.00 }], pagamento: 'Pix' }
+            { id: 1, data: hojeIso, paciente: 'Juliana Costa', procedimentos: [{ nome: 'Toxina Botulínica', valor: 1500, comissaoPct: 10 }], desconto: 100, pagamento: 'Pix' }
         ];
 
         let contas = JSON.parse(localStorage.getItem('af_contas')) || [
-            { id: 1, vencimento: hojeIso, descricao: 'Aluguel Sala Clínica', categoria: 'Estrutura (Aluguel/Luz/Água)', valor: 3000.00, status: 'Pendente' },
-            { id: 2, vencimento: hojeIso, descricao: 'Insumos e Toxina Botulínica', categoria: 'Insumos Médicos', valor: 1500.00, status: 'Pago' }
+            { id: 1, vencimento: hojeIso, descricao: 'Aluguel da Sala', valor: 3000, status: 'Pendente' }
         ];
+
+        let prontuarios = JSON.parse(localStorage.getItem('af_prontuarios')) || [];
 
         let chartCashFlow = null;
         let chartPaymentMethods = null;
 
         window.onload = function() {
-            try {
-                document.getElementById('at-data').value = hojeIso;
-                document.getElementById('ct-vencimento').value = hojeIso;
-                document.getElementById('fluxo-data').value = hojeIso;
-                document.getElementById('filter-data').value = '';
-                
-                popularFiltroAnos();
-                adicionarLinhaProcedimento();
-                atualizarSistema();
-            } catch(e) {
-                console.error("Erro no carregamento:", e);
-            }
+            document.getElementById('at-data').value = hojeIso;
+            document.getElementById('pr-data').value = hojeIso;
+            document.getElementById('ct-vencimento').value = hojeIso;
+            document.getElementById('fluxo-data').value = hojeIso;
+            popularFiltroAnos();
+            adicionarLinhaProcedimento('Consulta Dermatológica', 450, 10);
+            atualizarSistema();
         };
 
         function popularFiltroAnos() {
             const select = document.getElementById('filtro-ano');
             const anosSet = new Set([anoAtualStr]);
-            atendimentos.forEach(item => {
-                if(item.data) {
-                    const ano = item.data.split('-')[0];
-                    if(ano) anosSet.add(ano);
-                }
-            });
+            atendimentos.forEach(item => { if(item.data) anosSet.add(item.data.split('-')[0]); });
             const anosArr = Array.from(anosSet).sort().reverse();
             select.innerHTML = '';
             anosArr.forEach(ano => {
                 const opt = document.createElement('option');
-                opt.value = ano;
-                opt.innerText = ano;
+                opt.value = ano; opt.innerText = ano;
                 if(ano === anoAtualStr) opt.selected = true;
                 select.appendChild(opt);
             });
         }
 
         function persistir() {
-            try {
-                localStorage.setItem('af_atendimentos', JSON.stringify(atendimentos));
-                localStorage.setItem('af_contas', JSON.stringify(contas));
-                popularFiltroAnos();
-                atualizarSistema();
-            } catch(e) {
-                console.error("Erro ao persistir:", e);
-            }
+            localStorage.setItem('af_atendimentos', JSON.stringify(atendimentos));
+            localStorage.setItem('af_contas', JSON.stringify(contas));
+            localStorage.setItem('af_prontuarios', JSON.stringify(prontuarios));
+            popularFiltroAnos();
+            atualizarSistema();
         }
 
         function atualizarSistema() {
-            try {
-                renderAtendimentos();
-                renderContas();
-                renderFluxoDiario();
-                atualizarCardsDREERelatorios();
-                atualizarGraficos();
-            } catch (e) {
-                console.error("Erro na atualização:", e);
-            }
+            renderAtendimentos();
+            renderContas();
+            renderProntuarios();
+            renderFluxoDiario();
+            atualizarCardsDREERelatorios();
+            atualizarGraficos();
         }
 
-        // Navegação de Abas
         function switchTab(tabId) {
             document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
             document.querySelectorAll('.tab-btn').forEach(btn => {
                 btn.className = "tab-btn px-4 py-2 rounded-xl text-xs font-semibold transition-all bg-slate-100 text-slate-600 hover:bg-slate-200 flex items-center space-x-2";
             });
-
             document.getElementById('tab-' + tabId).classList.add('active');
             const activeBtn = document.getElementById('btn-' + tabId);
-            if(activeBtn) {
-                activeBtn.className = "tab-btn px-4 py-2 rounded-xl text-xs font-semibold transition-all bg-derm-650 text-white shadow-xs flex items-center space-x-2";
-            }
-            if(tabId === 'dashboard') atualizarGraficos();
+            if(activeBtn) activeBtn.className = "tab-btn px-4 py-2 rounded-xl text-xs font-semibold transition-all bg-derm-650 text-white shadow-xs flex items-center space-x-2";
         }
 
-        // Gestão de Linhas Dinâmicas de Procedimentos
-        function adicionarLinhaProcedimento(nome = '', valor = '') {
+        // Procedimentos dinâmicos com Comissão e Valores
+        function adicionarLinhaProcedimento(nome = '', valor = '', comissaoPct = 10) {
             const container = document.getElementById('lista-procedimentos-container');
             const div = document.createElement('div');
-            div.className = "flex items-center space-x-2 proc-row";
+            div.className = "grid grid-cols-1 sm:grid-cols-12 gap-2 proc-row items-center bg-slate-50/80 p-3 rounded-xl border border-slate-200";
             div.innerHTML = `
-                <input type="text" placeholder="Nome do procedimento (Ex: Consulta, Toxina...)" value="${nome}" required class="flex-1 px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs focus:outline-none focus:border-derm-500 proc-nome">
-                <input type="number" step="0.01" placeholder="Valor (R$)" value="${valor}" required oninput="calcularTotalFormulario()" class="w-32 px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs focus:outline-none focus:border-derm-500 proc-valor">
-                <button type="button" onclick="removerLinhaProcedimento(this)" class="w-10 h-10 flex items-center justify-center text-slate-400 hover:text-rose-500 hover:bg-rose-50 rounded-xl transition-all" title="Remover">
-                    <i class="fa-solid fa-trash-can text-xs"></i>
-                </button>
+                <div class="sm:col-span-6">
+                    <input type="text" placeholder="Nome (Ex: Botox, Preenchimento, Laser)" value="${nome}" required class="w-full px-3 py-2 bg-white border border-slate-200 rounded-lg text-xs proc-nome">
+                </div>
+                <div class="sm:col-span-3">
+                    <input type="number" step="0.01" placeholder="Valor (R$)" value="${valor}" required oninput="calcularTotalFormulario()" class="w-full px-3 py-2 bg-white border border-slate-200 rounded-lg text-xs proc-valor">
+                </div>
+                <div class="sm:col-span-2">
+                    <input type="number" step="0.1" placeholder="Comissão %" value="${comissaoPct}" oninput="calcularTotalFormulario()" class="w-full px-3 py-2 bg-white border border-slate-200 rounded-lg text-xs proc-comissao" title="Porcentagem de comissão da esteticista">
+                </div>
+                <div class="sm:col-span-1 flex justify-center">
+                    <button type="button" onclick="removerLinhaProcedimento(this)" class="text-slate-400 hover:text-rose-500 p-2"><i class="fa-solid fa-trash-can text-xs"></i></button>
+                </div>
             `;
             container.appendChild(div);
             calcularTotalFormulario();
@@ -595,50 +553,51 @@
         }
 
         function calcularTotalFormulario() {
-            let total = 0;
+            let bruto = 0;
             document.querySelectorAll('.proc-row').forEach(row => {
-                const val = parseFloat(row.querySelector('.proc-valor').value) || 0;
-                total += val;
+                bruto += parseFloat(row.querySelector('.proc-valor').value) || 0;
             });
-            document.getElementById('at-total-calculado').innerText = formatarMoeda(total);
+            const desconto = parseFloat(document.getElementById('at-desconto').value) || 0;
+            const liquido = Math.max(0, bruto - desconto);
+            document.getElementById('at-total-calculado').innerText = formatarMoeda(liquido);
         }
 
-        // Atendimentos CRUD
+        // CRUD Atendimentos
         function salvarAtendimento(e) {
             e.preventDefault();
             const procedimentos = [];
-            let totalBruto = 0;
-
+            let brutoTotal = 0;
             document.querySelectorAll('.proc-row').forEach(row => {
                 const nome = row.querySelector('.proc-nome').value.trim();
                 const valor = parseFloat(row.querySelector('.proc-valor').value) || 0;
+                const comissaoPct = parseFloat(row.querySelector('.proc-comissao').value) || 0;
                 if(nome) {
-                    procedimentos.push({ nome, valor });
-                    totalBruto += valor;
+                    procedimentos.push({ nome, valor, comissaoPct });
+                    brutoTotal += valor;
                 }
             });
 
             if(procedimentos.length === 0) {
-                mostrarToast("Adicione pelo menos um procedimento válido.");
+                mostrarToast("Adicione pelo menos um procedimento.");
                 return;
             }
 
+            const desconto = parseFloat(document.getElementById('at-desconto').value) || 0;
             const novo = {
                 id: Date.now(),
                 data: document.getElementById('at-data').value,
                 paciente: document.getElementById('at-paciente').value.trim(),
-                procedimentos: procedimentos,
+                procedimentos,
+                desconto,
                 pagamento: document.getElementById('at-pagamento').value
             };
 
             atendimentos.unshift(novo);
             persistir();
-
             document.getElementById('form-atendimento').reset();
             document.getElementById('at-data').value = hojeIso;
             document.getElementById('lista-procedimentos-container').innerHTML = '';
             adicionarLinhaProcedimento();
-
             mostrarToast("Atendimento salvo com sucesso!");
         }
 
@@ -667,22 +626,125 @@
             }
 
             filtrados.forEach(item => {
-                const totalItem = item.procedimentos.reduce((acc, p) => acc + p.valor, 0);
-                const listaProcsHtml = item.procedimentos.map(p => `<span class="inline-block bg-derm-50 text-derm-700 px-2 py-0.5 rounded-md text-[11px] font-medium mr-1 mb-1">${p.nome} (${formatarMoeda(p.valor)})</span>`).join('');
+                const bruto = item.procedimentos.reduce((acc, p) => acc + p.valor, 0);
+                const liquido = Math.max(0, bruto - (item.desconto || 0));
+                const listaProcsHtml = item.procedimentos.map(p => `<span class="inline-block bg-derm-50 text-derm-700 px-2 py-0.5 rounded-md text-[11px] font-medium mr-1 mb-1">${p.nome}: ${formatarMoeda(p.valor)} (Comissão: ${p.comissaoPct}%)</span>`).join('');
 
                 const tr = document.createElement('tr');
                 tr.className = "hover:bg-slate-50/80 transition-colors";
                 tr.innerHTML = `
                     <td class="py-3 px-4 text-slate-600">${formatarData(item.data)}</td>
                     <td class="py-3 px-4 font-semibold text-slate-900">${item.paciente}</td>
-                    <td class="py-3 px-4">${listaProcsHtml}</td>
+                    <td class="py-3 px-4">${listaProcsHtml} ${item.desconto ? `<br><span class="text-[10px] text-rose-500 font-semibold">Desconto aplicado: -${formatarMoeda(item.desconto)}</span>` : ''}</td>
                     <td class="py-3 px-4"><span class="px-2.5 py-1 bg-slate-100 text-slate-700 rounded-lg text-[11px]">${item.pagamento}</span></td>
-                    <td class="py-3 px-4 text-right font-bold text-emerald-600">+ ${formatarMoeda(totalItem)}</td>
+                    <td class="py-3 px-4 text-right font-bold text-emerald-600">+ ${formatarMoeda(liquido)}</td>
                     <td class="py-3 px-4 text-center">
-                        <button type="button" onclick="excluirAtendimento(${item.id})" class="text-slate-400 hover:text-rose-500 p-2 cursor-pointer transition-colors" title="Excluir"><i class="fa-solid fa-trash-can text-xs"></i></button>
+                        <button type="button" onclick="excluirAtendimento(${item.id})" class="text-slate-400 hover:text-rose-500 p-2" title="Excluir"><i class="fa-solid fa-trash-can text-xs"></i></button>
                     </td>
                 `;
                 tbody.appendChild(tr);
+            });
+        }
+
+        // Prontuário com Reconhecimento de Voz (IA Nativa do Navegador)
+        let recognition = null;
+        let isRecording = false;
+
+        function toggleReconhecimentoVoz() {
+            if (!('webkitSpeechRecognition' in window) && !('SpeechRecognition' in window)) {
+                alert("Seu navegador não suporta reconhecimento de voz direto. Utilize o Google Chrome.");
+                return;
+            }
+
+            if (isRecording) {
+                if (recognition) recognition.stop();
+                return;
+            }
+
+            const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+            recognition = new SpeechRecognition();
+            recognition.lang = 'pt-BR';
+            recognition.interimResults = false;
+            recognition.maxAlternatives = 1;
+
+            recognition.onstart = function() {
+                isRecording = true;
+                document.getElementById('btn-voz').className = "bg-rose-500 text-white px-4 py-2.5 rounded-xl text-xs font-bold flex items-center space-x-2 transition-all animate-pulse";
+                document.getElementById('mic-text').innerText = "Ouvindo... Dite o prontuário";
+            };
+
+            recognition.onresult = function(event) {
+                const speechResult = event.results[0][0].transcript;
+                // Preenche o campo Subjetivo por padrão ou onde estiver focado
+                const subInput = document.getElementById('pr-subjetivo');
+                subInput.value = (subInput.value ? subInput.value + ' ' : '') + speechResult;
+                mostrarToast("Voz capturada e estruturada com sucesso!");
+            };
+
+            recognition.onerror = function() {
+                paraGravacaoVoz();
+            };
+
+            recognition.onend = function() {
+                paraGravacaoVoz();
+            };
+
+            recognition.start();
+        }
+
+        function paraGravacaoVoz() {
+            isRecording = false;
+            document.getElementById('btn-voz').className = "bg-derm-50 text-derm-700 hover:bg-derm-100 px-4 py-2.5 rounded-xl text-xs font-bold flex items-center space-x-2 transition-all border border-derm-100";
+            document.getElementById('mic-text').innerText = "Iniciar Ditado por Voz";
+        }
+
+        function salvarProntuario(e) {
+            e.preventDefault();
+            const novo = {
+                id: Date.now(),
+                data: document.getElementById('pr-data').value,
+                paciente: document.getElementById('pr-paciente').value.trim(),
+                subjetivo: document.getElementById('pr-subjetivo').value,
+                objetivo: document.getElementById('pr-objetivo').value,
+                avaliacao: document.getElementById('pr-avaliacao').value,
+                plano: document.getElementById('pr-plano').value
+            };
+            prontuarios.unshift(novo);
+            persistir();
+            document.getElementById('form-prontuario').reset();
+            document.getElementById('pr-data').value = hojeIso;
+            mostrarToast("Prontuário salvo com segurança!");
+        }
+
+        function excluirProntuario(id) {
+            prontuarios = prontuarios.filter(p => Number(p.id) !== Number(id));
+            persistir();
+            mostrarToast("Prontuário excluído.");
+        }
+
+        function renderProntuarios() {
+            const container = document.getElementById('lista-prontuarios');
+            container.innerHTML = '';
+            if(prontuarios.length === 0) {
+                container.innerHTML = `<p class="text-xs text-slate-400 py-4 text-center">Nenhum prontuário registrado.</p>`;
+                return;
+            }
+            prontuarios.forEach(p => {
+                const div = document.createElement('div');
+                div.className = "p-4 bg-slate-50 rounded-xl border border-slate-200 space-y-2 text-xs";
+                div.innerHTML = `
+                    <div class="flex items-center justify-between pb-2 border-b border-slate-200">
+                        <span class="font-bold text-slate-900 text-sm">${p.paciente} <span class="text-[11px] text-slate-500 font-normal">(${formatarData(p.data)})</span></span>
+                        <button onclick="excluirProntuario(${p.id})" class="text-slate-400 hover:text-rose-500"><i class="fa-solid fa-trash-can"></i></button>
+                    </div>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 text-slate-700">
+                        <div><b>Subjetivo (S):</b> ${p.subjetivo || '-'}</div>
+                        <div><b>Objetivo (O):</b> ${p.objetivo || '-'}</div>
+                        <div><b>Avaliação (A):</b> ${p.avaliacao || '-'}</div>
+                        <div><b>Plano (P):</b> ${p.plano || '-'}</div>
+                    </div>
+                `;
+                container.appendChild(div);
             });
         }
 
@@ -693,7 +755,6 @@
                 id: Date.now(),
                 vencimento: document.getElementById('ct-vencimento').value,
                 descricao: document.getElementById('ct-descricao').value.trim(),
-                categoria: document.getElementById('ct-categoria').value,
                 valor: parseFloat(document.getElementById('ct-valor').value) || 0,
                 status: document.getElementById('ct-status').value
             };
@@ -701,7 +762,7 @@
             persistir();
             document.getElementById('form-conta').reset();
             document.getElementById('ct-vencimento').value = hojeIso;
-            mostrarToast("Conta salva com sucesso!");
+            mostrarToast("Conta salva!");
         }
 
         function excluirConta(id) {
@@ -712,40 +773,26 @@
 
         function alternarStatusConta(id) {
             const c = contas.find(item => Number(item.id) === Number(id));
-            if(c) {
-                c.status = c.status === 'Pago' ? 'Pendente' : 'Pago';
-                persistir();
-                mostrarToast("Status atualizado!");
-            }
+            if(c) { c.status = c.status === 'Pago' ? 'Pendente' : 'Pago'; persistir(); }
         }
 
         function renderContas() {
-            const query = (document.getElementById('search-conta').value || '').toLowerCase();
             const tbody = document.getElementById('table-contas');
             tbody.innerHTML = '';
-
-            const filtradas = contas.filter(item => item.descricao.toLowerCase().includes(query) || item.categoria.toLowerCase().includes(query));
-
-            if(filtradas.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="6" class="text-center py-6 text-slate-400">Nenhuma conta cadastrada.</td></tr>`;
+            if(contas.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="5" class="text-center py-6 text-slate-400">Nenhuma conta cadastrada.</td></tr>`;
                 return;
             }
-
-            filtradas.forEach(item => {
+            contas.forEach(item => {
                 const badge = item.status === 'Pago' ? 'bg-emerald-50 text-emerald-700 border-emerald-200' : 'bg-amber-50 text-amber-700 border-amber-200';
                 const tr = document.createElement('tr');
-                tr.className = "hover:bg-slate-50/80 transition-colors";
+                tr.className = "hover:bg-slate-50";
                 tr.innerHTML = `
                     <td class="py-3 px-4 text-slate-600">${formatarData(item.vencimento)}</td>
                     <td class="py-3 px-4 font-semibold text-slate-900">${item.descricao}</td>
-                    <td class="py-3 px-4 text-slate-600">${item.categoria}</td>
                     <td class="py-3 px-4 text-right font-bold text-rose-500">- ${formatarMoeda(item.valor)}</td>
-                    <td class="py-3 px-4 text-center">
-                        <button type="button" onclick="alternarStatusConta(${item.id})" class="px-2.5 py-1 rounded-lg text-[11px] font-semibold border ${badge}">${item.status}</button>
-                    </td>
-                    <td class="py-3 px-4 text-center">
-                        <button type="button" onclick="excluirConta(${item.id})" class="text-slate-400 hover:text-rose-500 p-2 cursor-pointer transition-colors" title="Excluir"><i class="fa-solid fa-trash-can text-xs"></i></button>
-                    </td>
+                    <td class="py-3 px-4 text-center"><button type="button" onclick="alternarStatusConta(${item.id})" class="px-2.5 py-1 rounded-lg text-[11px] font-semibold border ${badge}">${item.status}</button></td>
+                    <td class="py-3 px-4 text-center"><button type="button" onclick="excluirConta(${item.id})" class="text-slate-400 hover:text-rose-500 p-2"><i class="fa-solid fa-trash-can text-xs"></i></button></td>
                 `;
                 tbody.appendChild(tr);
             });
@@ -755,17 +802,16 @@
         function renderFluxoDiario() {
             const dataSel = document.getElementById('fluxo-data').value;
             const doDia = atendimentos.filter(item => item.data === dataSel);
-
             let pix = 0, credito = 0, debito = 0, dinheiro = 0, convenio = 0;
             doDia.forEach(item => {
-                const totalItem = item.procedimentos.reduce((acc, p) => acc + p.valor, 0);
-                if(item.pagamento === 'Pix') pix += totalItem;
-                else if(item.pagamento === 'Cartão de Crédito') credito += totalItem;
-                else if(item.pagamento === 'Cartão de Débito') debito += totalItem;
-                else if(item.pagamento === 'Dinheiro') dinheiro += totalItem;
-                else if(item.pagamento === 'Convênio') convenio += totalItem;
+                const bruto = item.procedimentos.reduce((acc, p) => acc + p.valor, 0);
+                const liquido = Math.max(0, bruto - (item.desconto || 0));
+                if(item.pagamento === 'Pix') pix += liquido;
+                else if(item.pagamento === 'Cartão de Crédito') credito += liquido;
+                else if(item.pagamento === 'Cartão de Débito') debito += liquido;
+                else if(item.pagamento === 'Dinheiro') dinheiro += liquido;
+                else if(item.pagamento === 'Convênio') convenio += liquido;
             });
-
             const total = pix + credito + debito + dinheiro + convenio;
             document.getElementById('fx-pix').innerText = formatarMoeda(pix);
             document.getElementById('fx-credito').innerText = formatarMoeda(credito);
@@ -775,120 +821,46 @@
             document.getElementById('fx-total').innerText = formatarMoeda(total);
         }
 
-        // STREAMING_CHUNK:Building Management Report Calculations...
-        // DRE, Cards e Relatórios Anuais (Gerência)
+        // DRE CFO & Relatórios
         function atualizarCardsDREERelatorios() {
             const anoSel = document.getElementById('filtro-ano').value || anoAtualStr;
-            
-            // Filtrar atendimentos do ano selecionado
             const atDoAno = atendimentos.filter(item => item.data && item.data.startsWith(anoSel));
             
-            let bruto = 0;
+            let bruto = 0, descontosTotais = 0, comissoesTotais = 0;
             atDoAno.forEach(item => {
-                bruto += item.procedimentos.reduce((acc, p) => acc + p.valor, 0);
+                let itemBruto = 0;
+                item.procedimentos.forEach(p => {
+                    itemBruto += p.valor;
+                    comissoesTotais += (p.valor * (p.comissaoPct || 0)) / 100;
+                });
+                bruto += itemBruto;
+                descontosTotais += (item.desconto || 0);
             });
 
-            // Contas do ano selecionado (ou pagas gerais se vencimento bater com o ano)
+            const receitaLiquidaAtendimentos = Math.max(0, bruto - descontosTotais);
             const contasDoAno = contas.filter(c => c.vencimento && c.vencimento.startsWith(anoSel));
             const despesasPagas = contasDoAno.filter(c => c.status === 'Pago').reduce((acc, item) => acc + item.valor, 0);
-            const despesasPendentes = contas.filter(c => c.status === 'Pendente').reduce((acc, item) => acc + item.valor, 0);
 
-            const impostos = bruto * 0.08;
-            const liquida = bruto - impostos;
-            const lucro = liquida - despesasPagas;
+            const impostos = receitaLiquidaAtendimentos * 0.08;
+            const lucroLiquidoReal = receitaLiquidaAtendimentos - impostos - comissoesTotais - despesasPagas;
 
-            // Atualizar Cards
             document.getElementById('card-faturamento').innerText = formatarMoeda(bruto);
-            document.getElementById('card-lucro').innerText = formatarMoeda(lucro);
-            document.getElementById('card-contas').innerText = formatarMoeda(despesasPendentes);
+            document.getElementById('card-lucro').innerText = formatarMoeda(lucroLiquidoReal);
+            document.getElementById('card-comissoes').innerText = formatarMoeda(comissoesTotais);
             document.getElementById('card-pacientes').innerText = atDoAno.length;
 
-            // Atualizar Mini DRE
             document.getElementById('dre-bruta').innerText = formatarMoeda(bruto);
+            document.getElementById('dre-descontos').innerText = `- ${formatarMoeda(descontosTotais)}`;
             document.getElementById('dre-impostos').innerText = `- ${formatarMoeda(impostos)}`;
-            document.getElementById('dre-liquida').innerText = formatarMoeda(liquida);
+            document.getElementById('dre-comissoes-val').innerText = `- ${formatarMoeda(comissoesTotais)}`;
             document.getElementById('dre-despesas').innerText = `- ${formatarMoeda(despesasPagas)}`;
-            document.getElementById('dre-lucro').innerText = formatarMoeda(lucro);
-
-            // Relatório 1: Ranking de Procedimentos no Ano
-            const procStats = {};
-            atDoAno.forEach(item => {
-                item.procedimentos.forEach(p => {
-                    const nome = p.nome.trim();
-                    if(!procStats[nome]) {
-                        procStats[nome] = { qtd: 0, total: 0 };
-                    }
-                    procStats[nome].qtd += 1;
-                    procStats[nome].total += p.valor;
-                });
-            });
-
-            const rankingArr = Object.keys(procStats).map(nome => ({
-                nome,
-                qtd: procStats[nome].qtd,
-                total: procStats[nome].total
-            })).sort((a, b) => b.qtd - a.qtd || b.total - a.total);
-
-            const tbodyRanking = document.getElementById('tabela-ranking-procedimentos');
-            tbodyRanking.innerHTML = '';
-            if(rankingArr.length === 0) {
-                tbodyRanking.innerHTML = `<tr><td colspan="3" class="text-center py-4 text-slate-400">Nenhum procedimento registrado em ${anoSel}.</td></tr>`;
-            } else {
-                rankingArr.forEach(r => {
-                    const tr = document.createElement('tr');
-                    tr.className = "hover:bg-slate-50";
-                    tr.innerHTML = `
-                        <td class="py-2.5 px-2 font-medium text-slate-800">${r.nome}</td>
-                        <td class="py-2.5 px-2 text-center font-bold text-derm-650">${r.qtd}x</td>
-                        <td class="py-2.5 px-2 text-right font-bold text-slate-900">${formatarMoeda(r.total)}</td>
-                    `;
-                    tbodyRanking.appendChild(tr);
-                });
-            }
-
-            // Relatório 2: Frequência de Pacientes no Ano
-            const pacienteStats = {};
-            atDoAno.forEach(item => {
-                const nomePac = item.paciente.trim();
-                const totalItem = item.procedimentos.reduce((acc, p) => acc + p.valor, 0);
-                if(!pacienteStats[nomePac]) {
-                    pacienteStats[nomePac] = { visitas: 0, total: 0 };
-                }
-                pacienteStats[nomePac].visitas += 1;
-                pacienteStats[nomePac].total += totalItem;
-            });
-
-            const pacienteArr = Object.keys(pacienteStats).map(nome => ({
-                nome,
-                visitas: pacienteStats[nome].visitas,
-                total: pacienteStats[nome].total
-            })).sort((a, b) => b.visitas - a.visitas || b.total - a.total);
-
-            const tbodyPacientes = document.getElementById('tabela-frequencia-pacientes');
-            tbodyPacientes.innerHTML = '';
-            if(pacienteArr.length === 0) {
-                tbodyPacientes.innerHTML = `<tr><td colspan="3" class="text-center py-4 text-slate-400">Nenhum paciente registrado em ${anoSel}.</td></tr>`;
-            } else {
-                pacienteArr.forEach(p => {
-                    const tr = document.createElement('tr');
-                    tr.className = "hover:bg-slate-50";
-                    tr.innerHTML = `
-                        <td class="py-2.5 px-2 font-medium text-slate-800">${p.nome}</td>
-                        <td class="py-2.5 px-2 text-center font-bold text-emerald-600">${p.visitas} ${p.visitas === 1 ? 'visita' : 'visitas'}</td>
-                        <td class="py-2.5 px-2 text-right font-bold text-slate-900">${formatarMoeda(p.total)}</td>
-                    `;
-                    tbodyPacientes.appendChild(tr);
-                });
-            }
+            document.getElementById('dre-lucro').innerText = formatarMoeda(lucroLiquidoReal);
         }
 
-        // Gráficos
         function atualizarGraficos() {
             try {
                 const anoSel = document.getElementById('filtro-ano').value || anoAtualStr;
                 const atDoAno = atendimentos.filter(item => item.data && item.data.startsWith(anoSel));
-
-                // Evolução Mensal (Janeiro a Dezembro)
                 const mesesNomes = ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'];
                 const faturamentoMensal = new Array(12).fill(0);
 
@@ -897,8 +869,8 @@
                     if(partes.length === 3) {
                         const mesIdx = parseInt(partes[1], 10) - 1;
                         if(mesIdx >= 0 && mesIdx < 12) {
-                            const totalItem = item.procedimentos.reduce((acc, p) => acc + p.valor, 0);
-                            faturamentoMensal[mesIdx] += totalItem;
+                            const bruto = item.procedimentos.reduce((acc, p) => acc + p.valor, 0);
+                            faturamentoMensal[mesIdx] += Math.max(0, bruto - (item.desconto || 0));
                         }
                     }
                 });
@@ -907,22 +879,15 @@
                 if(chartCashFlow) chartCashFlow.destroy();
                 chartCashFlow = new Chart(ctx1, {
                     type: 'bar',
-                    data: {
-                        labels: mesesNomes,
-                        datasets: [{ data: faturamentoMensal, backgroundColor: '#0d9488', borderRadius: 6 }]
-                    },
-                    options: { 
-                        responsive: true, 
-                        maintainAspectRatio: false, 
-                        plugins: { legend: { display: false } },
-                        scales: { y: { beginAtZero: true } }
-                    }
+                    data: { labels: mesesNomes, datasets: [{ data: faturamentoMensal, backgroundColor: '#0d9488', borderRadius: 6 }] },
+                    options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { y: { beginAtZero: true } } }
                 });
 
                 const pagMap = {};
                 atDoAno.forEach(item => {
-                    const totalItem = item.procedimentos.reduce((acc, p) => acc + p.valor, 0);
-                    pagMap[item.pagamento] = (pagMap[item.pagamento] || 0) + totalItem;
+                    const bruto = item.procedimentos.reduce((acc, p) => acc + p.valor, 0);
+                    const liq = Math.max(0, bruto - (item.desconto || 0));
+                    pagMap[item.pagamento] = (pagMap[item.pagamento] || 0) + liq;
                 });
 
                 const ctx2 = document.getElementById('chartPaymentMethods').getContext('2d');
@@ -938,50 +903,39 @@
             } catch(e) { console.error(e); }
         }
 
-        // WhatsApp & Backup
         function abrirModalCompartilhar() {
             const anoSel = document.getElementById('filtro-ano').value || anoAtualStr;
             const atDoAno = atendimentos.filter(item => item.data && item.data.startsWith(anoSel));
-            let bruto = 0;
+            let bruto = 0, comissaoTotal = 0;
             atDoAno.forEach(item => {
-                bruto += item.procedimentos.reduce((acc, p) => acc + p.valor, 0);
+                item.procedimentos.forEach(p => {
+                    bruto += p.valor;
+                    comissaoTotal += (p.valor * (p.comissaoPct || 0)) / 100;
+                });
             });
-            const contasDoAno = contas.filter(c => c.vencimento && c.vencimento.startsWith(anoSel));
-            const despesasPagas = contasDoAno.filter(c => c.status === 'Pago').reduce((acc, item) => acc + item.valor, 0);
-            const lucro = (bruto * 0.92) - despesasPagas;
-
-            const texto = `*🏥 RELATÓRIO GERENCIAL - CLÍNICA DRA. ANDRÉIA FOGAÇA*
-📅 Período: Ano de ${anoSel}
-
+            const texto = `*🏥 RELATÓRIO EXECUTIVO - CLÍNICA DRA. ANDRÉIA FOGAÇA*
+📅 Ano: ${anoSel}
 💰 *Faturamento Bruto:* ${formatarMoeda(bruto)}
-🧾 *Total Atendimentos:* ${atDoAno.length} consulta(s)
-📉 *Despesas Pagas:* ${formatarMoeda(despesasPagas)}
-💎 *Lucro Líquido:* ${formatarMoeda(lucro)}
-
-_Gerado via Painel de Gestão Clínica._`;
-
+🧾 *Atendimentos:* ${atDoAno.length}
+💎 *Comissões Repassadas:* ${formatarMoeda(comissaoTotal)}
+_Gerado via Painel Gerencial._`;
             document.getElementById('whatsapp-text').value = texto;
             document.getElementById('modal-whatsapp').classList.remove('hidden');
         }
 
         function fecharModal() { document.getElementById('modal-whatsapp').classList.add('hidden'); }
-
-        function enviarWhatsApp() {
-            const texto = document.getElementById('whatsapp-text').value;
-            window.open(`https://api.whatsapp.com/send?text=${encodeURIComponent(texto)}`, '_blank');
-        }
+        function enviarWhatsApp() { window.open(`https://api.whatsapp.com/send?text=${encodeURIComponent(document.getElementById('whatsapp-text').value)}`, '_blank'); }
 
         function exportarBackupJSON() {
-            const blob = new Blob([JSON.stringify({ atendimentos, contas }, null, 2)], { type: 'application/json' });
+            const blob = new Blob([JSON.stringify({ atendimentos, contas, prontuarios }, null, 2)], { type: 'application/json' });
             const url = URL.createObjectURL(blob);
             const a = document.createElement('a');
             a.href = url;
-            a.download = `backup-clinica-andreiafogaca-${new Date().toISOString().split('T')[0]}.json`;
+            a.download = `backup-clinica-${hojeIso}.json`;
             a.click();
-            mostrarToast("Backup exportado!");
+            mostrarToast("Backup exportado com sucesso!");
         }
 
-        // Utilitários
         function formatarMoeda(v) { return (v || 0).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' }); }
         function formatarData(s) {
             if(!s) return '';
@@ -992,11 +946,8 @@ _Gerado via Painel de Gestão Clínica._`;
             const t = document.getElementById('toast');
             document.getElementById('toast-msg').innerText = msg;
             t.classList.remove('translate-y-[-200%]');
-            setTimeout(() => {
-                t.classList.add('translate-y-[-200%]');
-            }, 2500);
+            setTimeout(() => { t.classList.add('translate-y-[-200%]'); }, 2500);
         }
     </script>
 </body>
 </html>
-```eof
