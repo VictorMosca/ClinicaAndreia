@@ -3,82 +3,150 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dra. Andréia Fogaça — Dermatologia & Gestão</title>
+    <title>Clínica Dra. Andréia Fogaça — Dermatologia & Gestão</title>
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>body { font-family: 'Plus Jakarta Sans', sans-serif; }</style>
 </head>
 <body class="bg-slate-50 text-slate-800 flex flex-col min-h-screen">
 
-    <!-- HEADER -->
+    <!-- HEADER INSTITUCIONAL COM LOGO -->
     <header class="bg-white border-b border-teal-100 px-6 py-4 flex items-center justify-between sticky top-0 z-30 shadow-xs">
         <div class="flex items-center gap-3">
-            <img src="logo-andreia.png" alt="Logo" class="h-10 w-auto object-contain" onerror="this.onerror=null; this.src='data:image/svg+xml;utf8,<svg xmlns=\'http://www.w3.org/2000/svg\' width=\'40\' height=\'40\'><rect width=\'40\' height=\'40\' fill=\'%230d9488\'/><text x=\'50%\' y=\'55%\' font-size=\'16\' fill=\'white\' text-anchor=\'middle\' dominant-baseline=\'middle\'>AF</text></svg>';">
+            <img src="logo.png" alt="Logo Dra. Andréia Fogaça" class="h-11 w-auto object-contain" onerror="this.onerror=null; this.src='data:image/svg+xml;utf8,<svg xmlns=\'http://www.w3.org/2000/svg\' width=\'45\' height=\'45\'><rect width=\'45\' height=\'45\' fill=\'%230d9488\' rx=\'8\'/><text x=\'50%\' y=\'55%\' font-size=\'18\' fill=\'white\' font-weight=\'bold\' text-anchor=\'middle\' dominant-baseline=\'middle\'>AF</text></svg>';">
             <div>
-                <h1 class="text-lg font-bold tracking-tight text-teal-900">Dra. Andréia Fogaça</h1>
-                <p class="text-xs text-teal-600 font-medium">Dermatologia & Gestão</p>
+                <h1 class="text-base font-bold tracking-tight text-teal-900">Clínica Dra. Andréia Fogaça</h1>
+                <p class="text-xs text-teal-600 font-medium">Dermatologia & Gestão Executiva</p>
             </div>
         </div>
-        <span class="text-xs bg-teal-50 text-teal-800 px-3 py-1.5 rounded-lg font-semibold border border-teal-200">Painel ADM / Médico</span>
+        <div class="flex items-center gap-2">
+            <span class="text-xs bg-teal-50 text-teal-800 px-3 py-1.5 rounded-lg font-semibold border border-teal-200">Painel Gerencial ADM</span>
+        </div>
     </header>
 
-    <!-- NAVEGAÇÃO -->
+    <!-- NAVEGAÇÃO PRINCIPAL -->
     <nav class="bg-white border-b border-slate-200 px-6 flex gap-2 overflow-x-auto shadow-xs">
-        <button onclick="mudarAba('dre')" id="nav-dre" class="py-3 px-4 text-sm font-semibold border-b-2 border-teal-600 text-teal-900 bg-teal-50/50 transition">Mini DRE & Dashboard</button>
-        <button onclick="mudarAba('atendimentos')" id="nav-atendimentos" class="py-3 px-4 text-sm font-semibold border-b-2 border-transparent text-slate-600 hover:text-teal-700 transition">Atendimentos & Caixa</button>
+        <button onclick="mudarAba('dre')" id="nav-dre" class="py-3 px-4 text-sm font-semibold border-b-2 border-teal-600 text-teal-900 bg-teal-50/50 transition">Mini DRE Visual & Gráficos</button>
+        <button onclick="mudarAba('atendimentos')" id="nav-atendimentos" class="py-3 px-4 text-sm font-semibold border-b-2 border-transparent text-slate-600 hover:text-teal-700 transition">Atendimentos & % Comissão</button>
         <button onclick="mudarAba('caixa')" id="nav-caixa" class="py-3 px-4 text-sm font-semibold border-b-2 border-transparent text-slate-600 hover:text-teal-700 transition">Caixa Diário & WhatsApp</button>
-        <button onclick="mudarAba('prontuario')" id="nav-prontuario" class="py-3 px-4 text-sm font-semibold border-b-2 border-transparent text-slate-600 hover:text-teal-700 transition">Prontuário & Voz IA</button>
+        <button onclick="mudarAba('prontuario')" id="nav-prontuario" class="py-3 px-4 text-sm font-semibold border-b-2 border-transparent text-slate-600 hover:text-teal-700 transition">Prontuário & Agente IA</button>
     </nav>
 
-    <!-- CONTEÚDO -->
+    <!-- CONTEÚDO DO PORTAL -->
     <main class="flex-1 p-6 max-w-7xl mx-auto w-full space-y-6">
 
-        <!-- 1. DRE -->
+        <!-- 1. MINI DRE VISUAL COM GRÁFICOS -->
         <section id="aba-dre" class="space-y-6">
             <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-xs flex justify-between items-center">
                 <div>
-                    <h2 class="text-xl font-bold text-slate-900">Visão Executiva & Mini DRE</h2>
-                    <p class="text-sm text-slate-500">Demonstrativo financeiro consolidado em tempo real.</p>
+                    <h2 class="text-xl font-bold text-slate-900">Visão Executiva & Mini DRE Gráfica</h2>
+                    <p class="text-sm text-slate-500">Acompanhamento visual em tempo real da saúde financeira da clínica.</p>
+                </div>
+                <div class="text-right">
+                    <span class="text-xs text-slate-400 block">Competência</span>
+                    <span class="text-sm font-bold text-teal-800">Novembro / 2026</span>
                 </div>
             </div>
+
+            <!-- CARDS DE KPI -->
             <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                <div class="bg-white p-6 rounded-2xl border shadow-xs"><p class="text-xs font-semibold text-slate-500 uppercase">Faturamento Bruto</p><h3 class="text-2xl font-extrabold text-slate-900 mt-2" id="kpiBruto">R$ 0,00</h3></div>
-                <div class="bg-white p-6 rounded-2xl border shadow-xs"><p class="text-xs font-semibold text-slate-500 uppercase">Lucro Líquido Real</p><h3 class="text-2xl font-extrabold text-teal-700 mt-2" id="kpiLucro">R$ 0,00</h3></div>
-                <div class="bg-white p-6 rounded-2xl border shadow-xs"><p class="text-xs font-semibold text-slate-500 uppercase">Total Atendimentos</p><h3 class="text-2xl font-extrabold text-slate-900 mt-2" id="kpiQtd">0</h3></div>
+                <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-xs">
+                    <p class="text-xs font-semibold text-slate-500 uppercase tracking-wider">Faturamento Bruto</p>
+                    <h3 class="text-2xl font-extrabold text-slate-900 mt-2" id="kpiBruto">R$ 0,00</h3>
+                </div>
+                <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-xs border-l-4 border-l-teal-600">
+                    <p class="text-xs font-semibold text-teal-700 uppercase tracking-wider">Lucro Líquido Real</p>
+                    <h3 class="text-2xl font-extrabold text-teal-800 mt-2" id="kpiLucro">R$ 0,00</h3>
+                </div>
+                <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-xs">
+                    <p class="text-xs font-semibold text-slate-500 uppercase tracking-wider">Total de Atendimentos</p>
+                    <h3 class="text-2xl font-extrabold text-slate-900 mt-2" id="kpiQtd">0</h3>
+                </div>
             </div>
-            <div class="bg-white p-6 rounded-2xl border shadow-xs space-y-3 text-sm">
-                <h3 class="text-lg font-bold text-slate-900 mb-4">Demonstrativo Consolidado</h3>
-                <div class="flex justify-between py-2 border-b font-semibold"><span>(=) Faturamento Bruto</span><span id="dreBruto">R$ 0,00</span></div>
-                <div class="flex justify-between py-2 border-b text-slate-600"><span>(-) Impostos (8%)</span><span class="text-rose-600" id="dreImpostos">- R$ 0,00</span></div>
-                <div class="flex justify-between py-2 border-b text-slate-600"><span>(-) Comissões Esteticista</span><span class="text-rose-600" id="dreComissao">- R$ 0,00</span></div>
-                <div class="flex justify-between py-2 border-b text-slate-600"><span>(-) Custo Insumos</span><span class="text-rose-600" id="dreInsumos">- R$ 0,00</span></div>
-                <div class="flex justify-between py-3 border-t-2 font-extrabold text-teal-700 text-base"><span>(=) Lucro Final Líquido</span><span id="dreLucro">R$ 0,00</span></div>
+
+            <!-- GRÁFICO DE BARRAS PROPORCIONAIS -->
+            <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-xs space-y-6">
+                <h3 class="text-lg font-bold text-slate-900 flex items-center gap-2">
+                    📊 Composição Gráfica do Resultado Financeiro
+                </h3>
+
+                <div class="space-y-4 text-sm">
+                    <div>
+                        <div class="flex justify-between font-semibold mb-1">
+                            <span>Faturamento Bruto Total</span>
+                            <span id="graficoBrutoVal">R$ 0,00 (100%)</span>
+                        </div>
+                        <div class="w-full bg-slate-100 h-3 rounded-full overflow-hidden">
+                            <div id="barBruto" class="bg-teal-700 h-full rounded-full transition-all duration-500" style="width: 100%"></div>
+                        </div>
+                    </div>
+
+                    <div>
+                        <div class="flex justify-between font-semibold mb-1 text-slate-600">
+                            <span>(-) Impostos sobre Serviços (8%)</span>
+                            <span class="text-rose-600" id="graficoImpostosVal">- R$ 0,00</span>
+                        </div>
+                        <div class="w-full bg-slate-100 h-2.5 rounded-full overflow-hidden">
+                            <div id="barImpostos" class="bg-rose-500 h-full rounded-full transition-all duration-500" style="width: 0%"></div>
+                        </div>
+                    </div>
+
+                    <div>
+                        <div class="flex justify-between font-semibold mb-1 text-slate-600">
+                            <span>(-) Comissões das Esteticistas (%)</span>
+                            <span class="text-rose-600" id="graficoComissaoVal">- R$ 0,00</span>
+                        </div>
+                        <div class="w-full bg-slate-100 h-2.5 rounded-full overflow-hidden">
+                            <div id="barComissao" class="bg-amber-500 h-full rounded-full transition-all duration-500" style="width: 0%"></div>
+                        </div>
+                    </div>
+
+                    <div>
+                        <div class="flex justify-between font-semibold mb-1 text-slate-600">
+                            <span>(-) Custo de Insumos & Produtos</span>
+                            <span class="text-rose-600" id="graficoInsumosVal">- R$ 0,00</span>
+                        </div>
+                        <div class="w-full bg-slate-100 h-2.5 rounded-full overflow-hidden">
+                            <div id="barInsumos" class="bg-purple-500 h-full rounded-full transition-all duration-500" style="width: 0%"></div>
+                        </div>
+                    </div>
+
+                    <div class="pt-4 border-t border-slate-200">
+                        <div class="flex justify-between font-extrabold text-base text-teal-900 mb-1">
+                            <span>(=) Lucro Final Líquido no Bolso</span>
+                            <span id="graficoLucroVal" class="text-teal-700">R$ 0,00</span>
+                        </div>
+                        <div class="w-full bg-slate-100 h-4 rounded-full overflow-hidden shadow-inner">
+                            <div id="barLucro" class="bg-teal-600 h-full rounded-full transition-all duration-500" style="width: 0%"></div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </section>
 
-        <!-- 2. ATENDIMENTOS COM CAMPOS ABERTOS -->
+        <!-- 2. ATENDIMENTOS COM CÁLCULO DE COMISSÃO EM % -->
         <section id="aba-atendimentos" class="space-y-6 hidden">
             <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-xs">
-                <h2 class="text-xl font-bold text-slate-900 mb-1" id="tituloForm">Registrar Novo Atendimento</h2>
-                <p class="text-sm text-slate-500 mb-6">Campos abertos para preenchimento flexível de valores e comissões.</p>
+                <h2 class="text-xl font-bold text-slate-900 mb-1" id="tituloForm">Lançamento de Atendimento (Comissão em %)</h2>
+                <p class="text-sm text-slate-500 mb-6">Insira os dados do procedimento. A comissão é calculada automaticamente baseada na porcentagem informada.</p>
 
                 <form onsubmit="salvarAtendimento(event)" class="grid grid-cols-1 md:grid-cols-3 gap-4">
                     <input type="hidden" id="editIndex" value="-1">
                     <div>
                         <label class="block text-xs font-semibold text-slate-700 mb-1">Nome da Paciente</label>
-                        <input type="text" id="inputPaciente" required placeholder="Ex: Mariana Costa" class="w-full border rounded-xl px-4 py-2 text-sm">
+                        <input type="text" id="inputPaciente" required placeholder="Ex: Mariana Costa" class="w-full border border-slate-300 rounded-xl px-4 py-2 text-sm focus:ring-2 focus:ring-teal-600 focus:outline-none">
                     </div>
                     <div>
                         <label class="block text-xs font-semibold text-slate-700 mb-1">Descrição do Procedimento</label>
-                        <input type="text" id="inputProcedimento" required placeholder="Ex: Toxina Full Face" class="w-full border rounded-xl px-4 py-2 text-sm">
+                        <input type="text" id="inputProcedimento" required placeholder="Ex: Toxina Botulínica" class="w-full border border-slate-300 rounded-xl px-4 py-2 text-sm focus:ring-2 focus:ring-teal-600 focus:outline-none">
                     </div>
                     <div>
                         <label class="block text-xs font-semibold text-slate-700 mb-1">Valor Total (R$)</label>
-                        <input type="number" step="0.01" id="inputValor" required placeholder="1500.00" class="w-full border rounded-xl px-4 py-2 text-sm">
+                        <input type="number" step="0.01" id="inputValor" required placeholder="1800.00" class="w-full border border-slate-300 rounded-xl px-4 py-2 text-sm focus:ring-2 focus:ring-teal-600 focus:outline-none">
                     </div>
                     <div>
                         <label class="block text-xs font-semibold text-slate-700 mb-1">Forma de Pagamento</label>
-                        <select id="inputPagamento" class="w-full border rounded-xl px-4 py-2 text-sm bg-white">
+                        <select id="inputPagamento" class="w-full border border-slate-300 rounded-xl px-4 py-2 text-sm bg-white">
                             <option value="Pix">Pix</option>
                             <option value="Cartão Crédito (3x)">Cartão Crédito (3x)</option>
                             <option value="Cartão Débito">Cartão Débito</option>
@@ -86,13 +154,15 @@
                         </select>
                     </div>
                     <div>
-                        <label class="block text-xs font-semibold text-slate-700 mb-1">Comissão Esteticista (R$)</label>
-                        <input type="number" step="0.01" id="inputComissao" value="0" class="w-full border rounded-xl px-4 py-2 text-sm">
+                        <label class="block text-xs font-semibold text-slate-700 mb-1">Comissão Esteticista (%)</label>
+                        <input type="number" step="0.1" id="inputComissaoPct" value="10" placeholder="Ex: 10 para 10%" class="w-full border border-slate-300 rounded-xl px-4 py-2 text-sm focus:ring-2 focus:ring-teal-600 focus:outline-none">
+                        <span class="text-[10px] text-slate-400 mt-0.5 block">Calculado automaticamente sobre o valor total.</span>
                     </div>
                     <div>
                         <label class="block text-xs font-semibold text-slate-700 mb-1">Custo Insumos (R$)</label>
-                        <input type="number" step="0.01" id="inputInsumos" value="0" class="w-full border rounded-xl px-4 py-2 text-sm">
+                        <input type="number" step="0.01" id="inputInsumos" value="0" placeholder="0.00" class="w-full border border-slate-300 rounded-xl px-4 py-2 text-sm focus:ring-2 focus:ring-teal-600 focus:outline-none">
                     </div>
+
                     <div class="md:col-span-3 flex justify-end gap-2">
                         <button type="button" onclick="cancelarEdicao()" id="btnCancelar" class="hidden bg-slate-200 text-slate-800 font-semibold px-6 py-2.5 rounded-xl">Cancelar</button>
                         <button type="submit" id="btnSalvar" class="bg-teal-700 hover:bg-teal-800 text-white font-semibold px-6 py-2.5 rounded-xl shadow-md">Salvar Atendimento</button>
@@ -100,12 +170,20 @@
                 </form>
             </div>
 
-            <div class="bg-white p-6 rounded-2xl border shadow-xs">
-                <h3 class="text-lg font-bold text-slate-900 mb-4">Atendimentos Registrados</h3>
+            <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-xs">
+                <h3 class="text-lg font-bold text-slate-900 mb-4">Atendimentos Registrados & Comissões</h3>
                 <div class="overflow-x-auto">
                     <table class="w-full text-left text-sm">
                         <thead>
-                            <tr class="border-b text-xs text-slate-500 uppercase"><th class="pb-3">Data</th><th class="pb-3">Paciente</th><th class="pb-3">Procedimento</th><th class="pb-3">Pagamento</th><th class="pb-3 text-right">Valor</th><th class="pb-3 text-center">Ações</th></tr>
+                            <tr class="border-b text-xs text-slate-500 uppercase">
+                                <th class="pb-3">Data</th>
+                                <th class="pb-3">Paciente</th>
+                                <th class="pb-3">Procedimento</th>
+                                <th class="pb-3">Pagamento</th>
+                                <th class="pb-3">Comissão (%)</th>
+                                <th class="pb-3 text-right">Valor Total</th>
+                                <th class="pb-3 text-center">Ações</th>
+                            </tr>
                         </thead>
                         <tbody id="tabelaAtendimentos" class="divide-y"></tbody>
                     </table>
@@ -113,43 +191,54 @@
             </div>
         </section>
 
-        <!-- 3. CAIXA & WHATSAPP -->
+        <!-- 3. CAIXA DIÁRIO & WHATSAPP -->
         <section id="aba-caixa" class="space-y-6 hidden">
-            <div class="bg-white p-6 rounded-2xl border flex justify-between items-center">
-                <div><h2 class="text-xl font-bold">Fechamento de Caixa Diário</h2><p class="text-sm text-slate-500">Resumo de entradas.</p></div>
-                <input type="date" id="inputDataCaixa" onchange="atualizarTudo()" class="border rounded-xl px-4 py-2 text-sm font-semibold text-teal-800 bg-teal-50">
+            <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-xs flex justify-between items-center">
+                <div>
+                    <h2 class="text-xl font-bold text-slate-900">Fechamento de Caixa Diário</h2>
+                    <p class="text-sm text-slate-500">Resumo de entradas do dia para a gestão.</p>
+                </div>
+                <input type="date" id="inputDataCaixa" onchange="atualizarTudo()" class="border border-slate-300 rounded-xl px-4 py-2 text-sm font-semibold text-teal-800 bg-teal-50">
             </div>
             <div class="grid grid-cols-2 md:grid-cols-5 gap-4">
                 <div class="bg-white p-4 rounded-2xl border text-center"><span class="text-xs text-slate-500">Pix</span><h4 class="text-lg font-bold mt-1" id="cPix">R$ 0,00</h4></div>
                 <div class="bg-white p-4 rounded-2xl border text-center"><span class="text-xs text-slate-500">Crédito</span><h4 class="text-lg font-bold mt-1" id="cCredito">R$ 0,00</h4></div>
                 <div class="bg-white p-4 rounded-2xl border text-center"><span class="text-xs text-slate-500">Débito</span><h4 class="text-lg font-bold mt-1" id="cDebito">R$ 0,00</h4></div>
                 <div class="bg-white p-4 rounded-2xl border text-center"><span class="text-xs text-slate-500">Dinheiro</span><h4 class="text-lg font-bold mt-1" id="cDinheiro">R$ 0,00</h4></div>
-                <div class="bg-teal-700 text-white p-4 rounded-2xl text-center shadow-md col-span-2 md:col-span-1"><span class="text-xs text-teal-100">Total</span><h4 class="text-xl font-extrabold mt-1" id="cTotal">R$ 0,00</h4></div>
+                <div class="bg-teal-700 text-white p-4 rounded-2xl text-center shadow-md col-span-2 md:col-span-1"><span class="text-xs text-teal-100">Total Arrecadado</span><h4 class="text-xl font-extrabold mt-1" id="cTotal">R$ 0,00</h4></div>
             </div>
             <div class="bg-gradient-to-br from-teal-800 to-teal-950 text-white p-6 rounded-2xl shadow-xl flex justify-between items-center">
-                <div><h3 class="text-xl font-bold">Enviar Resumo no WhatsApp</h3><p class="text-sm text-teal-100">Comprovante formatado para a Dra. Andréia.</p></div>
-                <button onclick="enviarWhatsApp()" class="bg-white text-teal-900 font-bold px-6 py-3 rounded-xl shadow-lg">Enviar no WhatsApp</button>
+                <div>
+                    <h3 class="text-xl font-bold">Enviar Resumo no WhatsApp</h3>
+                    <p class="text-sm text-teal-100/80">Dispara o comprovante oficial formatado diretamente para a Dra. Andréia.</p>
+                </div>
+                <button onclick="enviarWhatsApp()" class="bg-white text-teal-900 font-bold px-6 py-3 rounded-xl shadow-lg hover:bg-teal-50 transition">📱 Enviar no WhatsApp</button>
             </div>
         </section>
 
         <!-- 4. PRONTUÁRIO & VOZ IA -->
         <section id="aba-prontuario" class="space-y-6 hidden">
-            <div class="bg-white p-6 rounded-2xl border shadow-xs">
+            <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-xs">
                 <div class="flex justify-between items-center mb-4">
-                    <div><h2 class="text-xl font-bold">Prontuário com Agente IA & Voz</h2><p class="text-sm text-slate-500">Ditado estruturado no padrão SOAP.</p></div>
-                    <button onclick="iniciarVoz()" id="btnVoz" class="bg-teal-50 text-teal-800 border border-teal-200 px-4 py-2.5 rounded-xl text-sm font-semibold flex items-center gap-2 hover:bg-teal-100">🎙️ <span id="txtVoz">Ditar com Voz (IA)</span></button>
+                    <div>
+                        <h2 class="text-xl font-bold text-slate-900">Prontuário Eletrônico com Agente IA & Voz</h2>
+                        <p class="text-sm text-slate-500">Ditado por voz estruturado automaticamente no padrão SOAP.</p>
+                    </div>
+                    <button onclick="iniciarVoz()" id="btnVoz" class="bg-teal-50 text-teal-800 border border-teal-200 px-4 py-2.5 rounded-xl text-sm font-semibold flex items-center gap-2 hover:bg-teal-100 transition">
+                        🎙️ <span id="txtVoz">Ditar com Voz (IA)</span>
+                    </button>
                 </div>
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div><label class="block text-xs font-semibold mb-1">Paciente</label><input type="text" id="pPaciente" placeholder="Nome..." class="w-full border rounded-xl px-4 py-2 text-sm"></div>
-                    <div><label class="block text-xs font-semibold mb-1">Subjetivo (S)</label><input type="text" id="pS" placeholder="Queixa..." class="w-full border rounded-xl px-4 py-2 text-sm"></div>
+                    <div><label class="block text-xs font-semibold mb-1">Nome da Paciente</label><input type="text" id="pPaciente" placeholder="Ex: Mariana Costa" class="w-full border rounded-xl px-4 py-2 text-sm"></div>
+                    <div><label class="block text-xs font-semibold mb-1">Subjetivo (S)</label><input type="text" id="pS" placeholder="Queixas e relatos..." class="w-full border rounded-xl px-4 py-2 text-sm"></div>
                     <div><label class="block text-xs font-semibold mb-1">Objetivo (O)</label><input type="text" id="pO" placeholder="Exame físico..." class="w-full border rounded-xl px-4 py-2 text-sm"></div>
-                    <div><label class="block text-xs font-semibold mb-1">Avaliação (A)</label><input type="text" id="pA" placeholder="Avaliação..." class="w-full border rounded-xl px-4 py-2 text-sm"></div>
-                    <div class="md:col-span-2"><label class="block text-xs font-semibold mb-1">Plano (P)</label><textarea id="pP" rows="2" placeholder="Prescrição..." class="w-full border rounded-xl px-4 py-2 text-sm"></textarea></div>
-                    <div class="md:col-span-2 flex justify-end"><button onclick="salvarProntuario()" class="bg-teal-700 text-white font-semibold px-6 py-2.5 rounded-xl shadow-md">Assinar e Salvar Prontuário</button></div>
+                    <div><label class="block text-xs font-semibold mb-1">Avaliação / Conduta (A)</label><input type="text" id="pA" placeholder="Avaliação..." class="w-full border rounded-xl px-4 py-2 text-sm"></div>
+                    <div class="md:col-span-2"><label class="block text-xs font-semibold mb-1">Plano / Prescrição (P)</label><textarea id="pP" rows="2" placeholder="Produtos aplicados e retorno..." class="w-full border rounded-xl px-4 py-2 text-sm"></textarea></div>
+                    <div class="md:col-span-2 flex justify-end"><button onclick="salvarProntuario()" class="bg-teal-700 hover:bg-teal-800 text-white font-semibold px-6 py-2.5 rounded-xl shadow-md transition">Assinar e Salvar Prontuário</button></div>
                 </div>
             </div>
-            <div class="bg-white p-6 rounded-2xl border shadow-xs space-y-4">
-                <h3 class="text-lg font-bold">Histórico de Prontuários</h3>
+            <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-xs space-y-4">
+                <h3 class="text-lg font-bold text-slate-900">Histórico de Prontuários</h3>
                 <div id="listaProntuarios" class="space-y-3"></div>
             </div>
         </section>
@@ -158,7 +247,7 @@
 
     <script>
         let atendimentos = JSON.parse(localStorage.getItem('clinica_atendimentos')) || [
-            { id: 1, data: new Date().toISOString().split('T')[0], paciente: 'Mariana Costa', procedimento: 'Toxina Botulínica (Full Face)', valor: 1800, pagamento: 'Pix', comissaoEsteticista: 180, insumos: 250 }
+            { id: 1, data: new Date().toISOString().split('T')[0], paciente: 'Mariana Costa', procedimento: 'Toxina Botulínica (Full Face)', valor: 1800, pagamento: 'Pix', comissaoPct: 10, insumos: 250 }
         ];
         let prontuarios = JSON.parse(localStorage.getItem('clinica_prontuarios')) || [];
         document.getElementById('inputDataCaixa').value = new Date().toISOString().split('T')[0];
@@ -179,20 +268,36 @@
 
             let bruto = atendimentos.reduce((acc, i) => acc + Number(i.valor), 0);
             let impostos = bruto * 0.08;
-            let comissoes = atendimentos.reduce((acc, i) => acc + Number(i.comissaoEsteticista || 0), 0);
+            let comissoes = atendimentos.reduce((acc, i) => acc + (Number(i.valor) * (Number(i.comissaoPct || 0) / 100)), 0);
             let insumos = atendimentos.reduce((acc, i) => acc + Number(i.insumos || 0), 0);
             let lucro = bruto - (impostos + comissoes + insumos);
 
+            // KPIs
             document.getElementById('kpiBruto').innerText = `R$ ${bruto.toLocaleString('pt-BR', {minimumFractionDigits: 2})}`;
             document.getElementById('kpiLucro').innerText = `R$ ${lucro.toLocaleString('pt-BR', {minimumFractionDigits: 2})}`;
             document.getElementById('kpiQtd').innerText = atendimentos.length;
 
+            // DRE Valores
             document.getElementById('dreBruto').innerText = `R$ ${bruto.toLocaleString('pt-BR', {minimumFractionDigits: 2})}`;
             document.getElementById('dreImpostos').innerText = `- R$ ${impostos.toLocaleString('pt-BR', {minimumFractionDigits: 2})}`;
             document.getElementById('dreComissao').innerText = `- R$ ${comissoes.toLocaleString('pt-BR', {minimumFractionDigits: 2})}`;
             document.getElementById('dreInsumos').innerText = `- R$ ${insumos.toLocaleString('pt-BR', {minimumFractionDigits: 2})}`;
             document.getElementById('dreLucro').innerText = `R$ ${lucro.toLocaleString('pt-BR', {minimumFractionDigits: 2})}`;
 
+            // Gráfico Visual de Barras
+            let basePct = bruto > 0 ? bruto : 1;
+            document.getElementById('graficoBrutoVal').innerText = `R$ ${bruto.toLocaleString('pt-BR', {minimumFractionDigits: 2})} (100%)`;
+            document.getElementById('graficoImpostosVal').innerText = `- R$ ${impostos.toLocaleString('pt-BR', {minimumFractionDigits: 2})} (${((impostos/basePct)*100).toFixed(1)}%)`;
+            document.getElementById('graficoComissaoVal').innerText = `- R$ ${comissoes.toLocaleString('pt-BR', {minimumFractionDigits: 2})} (${((comissoes/basePct)*100).toFixed(1)}%)`;
+            document.getElementById('graficoInsumosVal').innerText = `- R$ ${insumos.toLocaleString('pt-BR', {minimumFractionDigits: 2})} (${((insumos/basePct)*100).toFixed(1)}%)`;
+            document.getElementById('graficoLucroVal').innerText = `R$ ${lucro.toLocaleString('pt-BR', {minimumFractionDigits: 2})} (${((lucro/basePct)*100).toFixed(1)}%)`;
+
+            document.getElementById('barImpostos').style.width = `${Math.min(100, (impostos/basePct)*100)}%`;
+            document.getElementById('barComissao').style.width = `${Math.min(100, (comissoes/basePct)*100)}%`;
+            document.getElementById('barInsumos').style.width = `${Math.min(100, (insumos/basePct)*100)}%`;
+            document.getElementById('barLucro').style.width = `${Math.max(0, Math.min(100, (lucro/basePct)*100))}%`;
+
+            // Caixa do Dia
             let dataFiltro = document.getElementById('inputDataCaixa').value;
             let hoje = atendimentos.filter(i => i.data === dataFiltro);
             let pix = hoje.filter(i => i.pagamento === 'Pix').reduce((a, b) => a + Number(b.valor), 0);
@@ -207,24 +312,27 @@
             document.getElementById('cDinheiro').innerText = `R$ ${dinheiro.toLocaleString('pt-BR', {minimumFractionDigits: 2})}`;
             document.getElementById('cTotal').innerText = `R$ ${totalCaixa.toLocaleString('pt-BR', {minimumFractionDigits: 2})}`;
 
+            // Tabela Atendimentos
             document.getElementById('tabelaAtendimentos').innerHTML = atendimentos.map((item, index) => `
                 <tr class="hover:bg-slate-50 transition">
                     <td class="py-3 text-slate-600">${item.data}</td>
                     <td class="py-3 font-semibold text-slate-900">${item.paciente}</td>
                     <td class="py-3 text-slate-700">${item.procedimento}</td>
                     <td class="py-3"><span class="px-2.5 py-1 bg-teal-50 text-teal-800 rounded-full text-xs font-semibold">${item.pagamento}</span></td>
+                    <td class="py-3 font-medium text-slate-700">${item.comissaoPct}%</td>
                     <td class="py-3 text-right font-bold text-slate-900">R$ ${Number(item.valor).toLocaleString('pt-BR', {minimumFractionDigits: 2})}</td>
                     <td class="py-3 text-center space-x-2">
-                        <button onclick="editarAtendimento(${index})" class="px-3 py-1 bg-slate-100 hover:bg-teal-50 text-teal-800 rounded-lg text-xs font-semibold">Editar</button>
-                        <button onclick="excluirAtendimento(${index})" class="px-3 py-1 bg-rose-50 hover:bg-rose-100 text-rose-700 rounded-lg text-xs font-semibold">Excluir</button>
+                        <button onclick="editarAtendimento(${index})" class="px-3 py-1 bg-slate-100 hover:bg-teal-50 text-teal-800 rounded-lg text-xs font-semibold transition">Editar</button>
+                        <button onclick="excluirAtendimento(${index})" class="px-3 py-1 bg-rose-50 hover:bg-rose-100 text-rose-700 rounded-lg text-xs font-semibold transition">Excluir</button>
                     </td>
                 </tr>
             `).join('');
 
+            // Prontuários
             document.getElementById('listaProntuarios').innerHTML = prontuarios.map(p => `
-                <div class="border rounded-xl p-4 bg-slate-50 space-y-2">
-                    <div class="flex justify-between items-center"><span class="font-bold">${p.paciente}</span><span class="text-xs text-slate-500">${p.data}</span></div>
-                    <div class="text-xs text-slate-700 grid grid-cols-1 md:grid-cols-2 gap-2 bg-white p-3 rounded-lg border">
+                <div class="border border-slate-200 rounded-xl p-4 bg-slate-50 space-y-2">
+                    <div class="flex justify-between items-center"><span class="font-bold text-slate-900">${p.paciente}</span><span class="text-xs text-slate-500">${p.data}</span></div>
+                    <div class="text-xs text-slate-700 grid grid-cols-1 md:grid-cols-2 gap-2 bg-white p-3 rounded-lg border border-slate-200">
                         <div><b>S:</b> ${p.s}</div><div><b>O:</b> ${p.o}</div><div><b>A:</b> ${p.a}</div><div><b>P:</b> ${p.p}</div>
                     </div>
                 </div>
@@ -241,7 +349,7 @@
                 procedimento: document.getElementById('inputProcedimento').value,
                 valor: Number(document.getElementById('inputValor').value),
                 pagamento: document.getElementById('inputPagamento').value,
-                comissaoEsteticista: Number(document.getElementById('inputComissao').value),
+                comissaoPct: Number(document.getElementById('inputComissaoPct').value),
                 insumos: Number(document.getElementById('inputInsumos').value)
             };
 
@@ -254,7 +362,7 @@
                 document.getElementById('inputPaciente').value = '';
                 document.getElementById('inputProcedimento').value = '';
                 document.getElementById('inputValor').value = '';
-                document.getElementById('inputComissao').value = '0';
+                document.getElementById('inputComissaoPct').value = '10';
                 document.getElementById('inputInsumos').value = '0';
                 alert('Atendimento registrado com sucesso!');
             }
@@ -268,11 +376,12 @@
             document.getElementById('inputProcedimento').value = item.procedimento;
             document.getElementById('inputValor').value = item.valor;
             document.getElementById('inputPagamento').value = item.pagamento;
-            document.getElementById('inputComissao').value = item.comissaoEsteticista;
+            document.getElementById('inputComissaoPct').value = item.comissaoPct || 10;
             document.getElementById('inputInsumos').value = item.insumos;
             document.getElementById('tituloForm').innerText = "Editar Atendimento";
             document.getElementById('btnCancelar').classList.remove('hidden');
             document.getElementById('btnSalvar').innerText = "Atualizar Atendimento";
+            mudarAba('atendimentos');
         }
 
         function cancelarEdicao() {
@@ -280,15 +389,15 @@
             document.getElementById('inputPaciente').value = '';
             document.getElementById('inputProcedimento').value = '';
             document.getElementById('inputValor').value = '';
-            document.getElementById('inputComissao').value = '0';
+            document.getElementById('inputComissaoPct').value = '10';
             document.getElementById('inputInsumos').value = '0';
-            document.getElementById('tituloForm').innerText = "Registrar Novo Atendimento";
+            document.getElementById('tituloForm').innerText = "Lançamento de Atendimento (Comissão em %)";
             document.getElementById('btnCancelar').classList.add('hidden');
             document.getElementById('btnSalvar').innerText = "Salvar Atendimento";
         }
 
         function excluirAtendimento(index) {
-            if(confirm('Excluir este atendimento?')) {
+            if(confirm('Deseja excluir este atendimento?')) {
                 atendimentos.splice(index, 1);
                 atualizarTudo();
             }
@@ -299,18 +408,18 @@
             txt.innerText = "Processando IA...";
             setTimeout(() => {
                 document.getElementById('pPaciente').value = "Mariana Costa";
-                document.getElementById('pS').value = "Paciente refere melhora das rugas estáticas.";
-                document.getElementById('pO').value = "Boa resposta à toxina botulínica.";
-                document.getElementById('pA').value = "Evolução clínica excelente.";
-                document.getElementById('pP').value = "Retorno em 4 meses.";
+                document.getElementById('pS').value = "Paciente refere melhora das rugas e bom tônus.";
+                document.getElementById('pO').value = "Boa resposta à toxina aplicada.";
+                document.getElementById('pA').value = "Evolução clínica excelente no terço superior.";
+                document.getElementById('pP').value = "Retorno agendado para daqui a 4 meses.";
                 txt.innerText = "Ditar com Voz (IA)";
-                alert("Agente IA: Prontuário estruturado no padrão SOAP!");
+                alert("Agente IA: Prontuário estruturado no padrão SOAP com sucesso!");
             }, 1000);
         }
 
         function salvarProntuario() {
             let p = document.getElementById('pPaciente').value;
-            if(!p) return alert('Informe a paciente.');
+            if(!p) return alert('Informe o nome da paciente.');
             prontuarios.unshift({
                 id: Date.now(),
                 data: new Date().toLocaleString(),
@@ -326,12 +435,12 @@
             document.getElementById('pA').value = '';
             document.getElementById('pP').value = '';
             atualizarTudo();
-            alert('Prontuário salvo com sucesso!');
+            alert('Prontuário assinado e salvo com segurança!');
         }
 
         function enviarWhatsApp() {
             let total = document.getElementById('cTotal').innerText;
-            let msg = `*CLÍNICA DRA. ANDRÉIA FOGAÇA*\n📅 Caixa: ${document.getElementById('inputDataCaixa').value}\n\n💰 *TOTAL: ${total}*`;
+            let msg = `*CLÍNICA DRA. ANDRÉIA FOGAÇA*\n📅 Caixa Diário: ${document.getElementById('inputDataCaixa').value}\n\n💰 *TOTAL ARRECADADO: ${total}*\n\n_Gerado pelo sistema de gestão_`;
             window.open(`https://api.whatsapp.com/send?text=${encodeURIComponent(msg)}`, '_blank');
         }
 
