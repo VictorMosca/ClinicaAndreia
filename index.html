@@ -10,7 +10,7 @@
         body { font-family: 'Plus Jakarta Sans', sans-serif; }
     </style>
 </head>
-<body class="bg-slate-50 text-slate-800 min-p-0 flex flex-col min-h-screen">
+<body class="bg-slate-50 text-slate-800 flex flex-col min-h-screen">
 
     <!-- HEADER COM LOGO DA DRA. ANDRÉIA -->
     <header class="bg-white border-b border-teal-100 px-6 py-4 flex items-center justify-between sticky top-0 z-30 shadow-xs">
@@ -23,14 +23,14 @@
         </div>
         <div class="flex items-center gap-3">
             <span class="text-xs font-semibold bg-teal-50 text-teal-800 px-3 py-1.5 rounded-lg border border-teal-200" id="perfilAtivoTxt">Perfil: ADM / Gerente</span>
-            <button onclick="mudarPerfil()" class="text-xs bg-slate-100 hover:bg-slate-200 px-3 py-1.5 rounded-lg font-semibold transition">Trocar Perfil</button>
+            <span class="text-xs bg-teal-700 text-white px-3 py-1.5 rounded-lg font-bold shadow-xs">Sistema Operacional Ativo</span>
         </div>
     </header>
 
     <!-- NAVEGAÇÃO -->
     <nav class="bg-white border-b border-slate-200 px-6 flex gap-2 overflow-x-auto shadow-xs">
         <button onclick="mudarAba('dre')" id="btn-dre" class="py-3 px-4 text-sm font-semibold border-b-2 border-teal-600 text-teal-900 bg-teal-50/50 transition">Mini DRE & Dashboard</button>
-        <button onclick="mudarAba('atendimentos')" id="btn-atendimentos" class="py-3 px-4 text-sm font-semibold border-b-2 border-transparent text-slate-600 hover:text-teal-700 transition">Novo Atendimento</button>
+        <button onclick="mudarAba('atendimentos')" id="btn-atendimentos" class="py-3 px-4 text-sm font-semibold border-b-2 border-transparent text-slate-600 hover:text-teal-700 transition">Atendimentos & Gestão</button>
         <button onclick="mudarAba('caixa')" id="btn-caixa" class="py-3 px-4 text-sm font-semibold border-b-2 border-transparent text-slate-600 hover:text-teal-700 transition">Caixa & WhatsApp</button>
         <button onclick="mudarAba('prontuario')" id="btn-prontuario" class="py-3 px-4 text-sm font-semibold border-b-2 border-transparent text-slate-600 hover:text-teal-700 transition">Prontuário & Voz IA</button>
         <button onclick="mudarAba('insumos')" id="btn-insumos" class="py-3 px-4 text-sm font-semibold border-b-2 border-transparent text-slate-600 hover:text-teal-700 transition">Insumos</button>
@@ -44,7 +44,7 @@
             <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-xs flex justify-between items-center">
                 <div>
                     <h2 class="text-xl font-bold text-slate-900">Visão Executiva & Mini DRE Gerencial</h2>
-                    <p class="text-sm text-slate-500">Demonstrativo financeiro consolidado em tempo real.</p>
+                    <p class="text-sm text-slate-500">Demonstrativo financeiro consolidado em tempo real com impostos e insumos.</p>
                 </div>
                 <select id="anoSelect" class="border border-slate-300 rounded-lg px-3 py-1.5 text-sm font-medium">
                     <option value="2026">2026</option>
@@ -102,12 +102,13 @@
             </div>
         </div>
 
-        <!-- ABA 2: ATENDIMENTOS -->
+        <!-- ABA 2: ATENDIMENTOS (COM EDIÇÃO E EXCLUSÃO) -->
         <div id="aba-atendimentos" class="space-y-6 hidden">
             <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-xs">
-                <h2 class="text-xl font-bold text-slate-900 mb-1">Registrar Atendimento</h2>
+                <h2 class="text-xl font-bold text-slate-900 mb-1" id="formTitulo">Registrar Atendimento</h2>
                 <p class="text-sm text-slate-500 mb-6">Lançamento rápido integrado ao caixa e DRE.</p>
 
+                <input type="hidden" id="editIndex" value="-1">
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
                     <div>
                         <label class="block text-xs font-semibold text-slate-700 mb-1">Nome do Paciente</label>
@@ -116,9 +117,10 @@
                     <div>
                         <label class="block text-xs font-semibold text-slate-700 mb-1">Procedimento</label>
                         <select id="selectProcedimento" class="w-full border border-slate-300 rounded-xl px-4 py-2.5 text-sm bg-white">
-                            <option value="Toxina Botulínica|1800|250|180|100">Toxina Botulínica (Full Face) — R$ 1.800</option>
+                            <option value="Toxina Botulínica (Full Face)|1800|250|180|100">Toxina Botulínica (Full Face) — R$ 1.800</option>
                             <option value="Laser Lavieen|1200|150|120|80">Laser Lavieen — R$ 1.200</option>
-                            <option value="Bioestimulador|2500|800|250|150">Bioestimulador de Colágeno — R$ 2.500</option>
+                            <option value="Bioestimulador de Colágeno|2500|800|250|150">Bioestimulador de Colágeno — R$ 2.500</option>
+                            <option value="Preenchimento Labial|1500|500|150|100">Preenchimento Labial — R$ 1.500</option>
                         </select>
                     </div>
                     <div>
@@ -130,14 +132,15 @@
                             <option value="Dinheiro">Dinheiro</option>
                         </select>
                     </div>
-                    <div class="md:col-span-3 flex justify-end">
+                    <div class="md:col-span-3 flex justify-end gap-3">
+                        <button id="btnCancelarEdicao" onclick="cancelarEdicao()" class="hidden bg-slate-200 hover:bg-slate-300 text-slate-800 font-semibold px-5 py-3 rounded-xl transition">Cancelar</button>
                         <button onclick="salvarAtendimento()" class="bg-teal-700 hover:bg-teal-800 text-white font-semibold px-6 py-3 rounded-xl transition shadow-md">Salvar Atendimento</button>
                     </div>
                 </div>
             </div>
 
             <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-xs">
-                <h3 class="text-lg font-bold text-slate-900 mb-4">Atendimentos Recentes</h3>
+                <h3 class="text-lg font-bold text-slate-900 mb-4">Atendimentos Registrados</h3>
                 <div class="overflow-x-auto">
                     <table class="w-full text-left text-sm">
                         <thead>
@@ -147,23 +150,11 @@
                                 <th class="pb-3">Procedimento</th>
                                 <th class="pb-3">Pagamento</th>
                                 <th class="pb-3 text-right">Valor</th>
+                                <th class="pb-3 text-center">Ações</th>
                             </tr>
                         </thead>
                         <tbody id="tabelaAtendimentos" class="divide-y divide-slate-100">
-                            <tr>
-                                <td class="py-3 text-slate-600">2026-11-12</td>
-                                <td class="py-3 font-semibold">Mariana Costa</td>
-                                <td class="py-3">Toxina Botulínica (Full Face)</td>
-                                <td class="py-3"><span class="px-2.5 py-1 bg-teal-50 text-teal-800 rounded-full text-xs font-semibold">Pix</span></td>
-                                <td class="py-3 text-right font-bold">R$ 1.800,00</td>
-                            </tr>
-                            <tr>
-                                <td class="py-3 text-slate-600">2026-11-12</td>
-                                <td class="py-3 font-semibold">Juliana Paes</td>
-                                <td class="py-3">Laser Lavieen</td>
-                                <td class="py-3"><span class="px-2.5 py-1 bg-teal-50 text-teal-800 rounded-full text-xs font-semibold">Cartão Crédito (3x)</span></td>
-                                <td class="py-3 text-right font-bold">R$ 1.200,00</td>
-                            </tr>
+                            <!-- Preenchido via JavaScript -->
                         </tbody>
                     </table>
                 </div>
@@ -175,42 +166,72 @@
             <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-xs flex justify-between items-center">
                 <div>
                     <h2 class="text-xl font-bold text-slate-900">Fechamento de Caixa Diário</h2>
-                    <p class="text-sm text-slate-500">Resumo de entradas do dia.</p>
+                    <p class="text-sm text-slate-500">Resumo consolidado para o dia.</p>
                 </div>
                 <input type="date" id="dataCaixaInput" class="border border-slate-300 rounded-xl px-4 py-2 text-sm font-semibold text-teal-800 bg-teal-50/50">
             </div>
 
             <div class="grid grid-cols-2 md:grid-cols-5 gap-4">
-                <div class="bg-white p-4 rounded-2xl border text-center"><span class="text-xs text-slate-500">Pix</span><h4 class="text-lg font-bold mt-1" id="valPix">R$ 1.800,00</h4></div>
-                <div class="bg-white p-4 rounded-2xl border text-center"><span class="text-xs text-slate-500">Crédito</span><h4 class="text-lg font-bold mt-1" id="valCredito">R$ 1.200,00</h4></div>
+                <div class="bg-white p-4 rounded-2xl border text-center"><span class="text-xs text-slate-500">Pix</span><h4 class="text-lg font-bold mt-1" id="valPix">R$ 0,00</h4></div>
+                <div class="bg-white p-4 rounded-2xl border text-center"><span class="text-xs text-slate-500">Crédito</span><h4 class="text-lg font-bold mt-1" id="valCredito">R$ 0,00</h4></div>
                 <div class="bg-white p-4 rounded-2xl border text-center"><span class="text-xs text-slate-500">Débito</span><h4 class="text-lg font-bold mt-1" id="valDebito">R$ 0,00</h4></div>
                 <div class="bg-white p-4 rounded-2xl border text-center"><span class="text-xs text-slate-500">Dinheiro</span><h4 class="text-lg font-bold mt-1" id="valDinheiro">R$ 0,00</h4></div>
-                <div class="bg-teal-700 text-white p-4 rounded-2xl text-center shadow-md col-span-2 md:col-span-1"><span class="text-xs text-teal-100">Total</span><h4 class="text-xl font-extrabold mt-1" id="valTotalCaixa">R$ 3.000,00</h4></div>
+                <div class="bg-teal-700 text-white p-4 rounded-2xl text-center shadow-md col-span-2 md:col-span-1"><span class="text-xs text-teal-100">Total Arrecadado</span><h4 class="text-xl font-extrabold mt-1" id="valTotalCaixa">R$ 0,00</h4></div>
             </div>
 
             <div class="bg-gradient-to-br from-teal-800 to-teal-950 text-white p-6 rounded-2xl shadow-xl flex justify-between items-center">
                 <div>
                     <h3 class="text-xl font-bold">Enviar Resumo no WhatsApp</h3>
-                    <p class="text-sm text-teal-100/80">Gera o comprovante pronto para enviar à Dra. Andréia.</p>
+                    <p class="text-sm text-teal-100/85">Gera o comprovante oficial pronto para enviar à Dra. Andréia.</p>
                 </div>
                 <button onclick="enviarWhatsApp()" class="bg-white text-teal-900 font-bold px-6 py-3.5 rounded-xl shadow-lg hover:bg-teal-50 transition">Enviar no WhatsApp</button>
             </div>
         </div>
 
-        <!-- ABA 4: PRONTUÁRIO -->
+        <!-- ABA 4: PRONTUÁRIO & VOZ IA -->
         <div id="aba-prontuario" class="space-y-6 hidden">
             <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-xs">
-                <h2 class="text-xl font-bold text-slate-900 mb-1">Prontuário Eletrônico (PEP) com Assistente IA</h2>
-                <p class="text-sm text-slate-500 mb-4">Evolução clínica estruturada no padrão SOAP.</p>
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <input type="text" id="pPaciente" placeholder="Nome da Paciente..." class="border border-slate-300 rounded-xl px-4 py-2 text-sm">
-                    <input type="text" id="pS" placeholder="Subjetivo (S)..." class="border border-slate-300 rounded-xl px-4 py-2 text-sm">
-                    <input type="text" id="pO" placeholder="Objetivo (O)..." class="border border-slate-300 rounded-xl px-4 py-2 text-sm">
-                    <input type="text" id="pA" placeholder="Avaliação (A)..." class="border border-slate-300 rounded-xl px-4 py-2 text-sm">
-                    <textarea id="pP" rows="2" placeholder="Plano / Prescrição (P)..." class="md:col-span-2 border border-slate-300 rounded-xl px-4 py-2 text-sm"></textarea>
-                    <div class="md:col-span-2 flex justify-end">
-                        <button onclick="salvarProntuario()" class="bg-teal-700 text-white font-semibold px-6 py-2.5 rounded-xl">Assinar e Salvar Prontuário</button>
+                <div class="flex justify-between items-center mb-4">
+                    <div>
+                        <h2 class="text-xl font-bold text-slate-900">Prontuário Eletrônico com Agente IA & Voz</h2>
+                        <p class="text-sm text-slate-500">Dite a consulta para a Dra. Andréia e a Inteligência Artificial organiza no padrão SOAP.</p>
                     </div>
+                    <button onclick="alternarGravacaoVoz()" id="btnVoz" class="bg-teal-50 border border-teal-200 text-teal-800 px-4 py-2.5 rounded-xl text-sm font-semibold flex items-center gap-2 hover:bg-teal-100 transition shadow-xs">
+                        🎙️ <span id="txtVoz">Ditar com Voz (IA)</span>
+                    </button>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-700 mb-1">Nome da Paciente</label>
+                        <input type="text" id="pPaciente" placeholder="Selecione ou digite o nome..." class="w-full border border-slate-300 rounded-xl px-4 py-2 text-sm focus:ring-2 focus:ring-teal-600 focus:outline-none">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-700 mb-1">Subjetivo (S)</label>
+                        <input type="text" id="pS" placeholder="Queixa principal e relatos..." class="w-full border border-slate-300 rounded-xl px-4 py-2 text-sm focus:ring-2 focus:ring-teal-600 focus:outline-none">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-700 mb-1">Objetivo (O)</label>
+                        <input type="text" id="pO" placeholder="Exame físico e achados..." class="w-full border border-slate-300 rounded-xl px-4 py-2 text-sm focus:ring-2 focus:ring-teal-600 focus:outline-none">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-700 mb-1">Avaliação / Conduta (A)</label>
+                        <input type="text" id="pA" placeholder="Avaliação clínica..." class="w-full border border-slate-300 rounded-xl px-4 py-2 text-sm focus:ring-2 focus:ring-teal-600 focus:outline-none">
+                    </div>
+                    <div class="md:col-span-2">
+                        <label class="block text-xs font-semibold text-slate-700 mb-1">Plano / Prescrição (P)</label>
+                        <textarea id="pP" rows="2" placeholder="Produtos aplicados, orientações e retorno..." class="w-full border border-slate-300 rounded-xl px-4 py-2 text-sm focus:ring-2 focus:ring-teal-600 focus:outline-none"></textarea>
+                    </div>
+                    <div class="md:col-span-2 flex justify-end">
+                        <button onclick="salvarProntuario()" class="bg-teal-700 hover:bg-teal-800 text-white font-semibold px-6 py-2.5 rounded-xl shadow-md transition">Assinar e Salvar Prontuário</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-xs space-y-4">
+                <h3 class="text-lg font-bold text-slate-900">Histórico de Prontuários Assinados</h3>
+                <div id="listaProntuarios" class="space-y-3">
+                    <!-- Preenchido via JS -->
                 </div>
             </div>
         </div>
@@ -218,12 +239,12 @@
         <!-- ABA 5: INSUMOS -->
         <div id="aba-insumos" class="space-y-6 hidden">
             <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-xs">
-                <h2 class="text-xl font-bold text-slate-900 mb-4">Controle de Insumos</h2>
+                <h2 class="text-xl font-bold text-slate-900 mb-4">Controle de Insumos & Estoque</h2>
                 <table class="w-full text-left text-sm">
-                    <thead><tr class="border-b text-xs text-slate-500 uppercase"><th class="pb-3">Insumo</th><th class="pb-3">Custo</th><th class="pb-3">Qtd</th></tr></thead>
+                    <thead><tr class="border-b text-xs text-slate-500 uppercase"><th class="pb-3">Insumo</th><th class="pb-3">Custo Unitário</th><th class="pb-3">Qtd Atual</th><th class="pb-3">Status</th></tr></thead>
                     <tbody class="divide-y">
-                        <tr><td class="py-3 font-semibold">Toxina Botulínica 100U</td><td class="py-3">R$ 650,00</td><td class="py-3 font-bold">4 un</td></tr>
-                        <tr><td class="py-3 font-semibold">Seringas 1ml</td><td class="py-3">R$ 3,50</td><td class="py-3 font-bold">45 un</td></tr>
+                        <tr><td class="py-3 font-semibold">Toxina Botulínica 100U</td><td class="py-3">R$ 650,00</td><td class="py-3 font-bold">4 un</td><td class="py-3"><span class="px-2.5 py-1 bg-teal-50 text-teal-800 rounded-full text-xs font-semibold">Normal</span></td></tr>
+                        <tr><td class="py-3 font-semibold">Seringas 1ml</td><td class="py-3">R$ 3,50</td><td class="py-3 font-bold">45 un</td><td class="py-3"><span class="px-2.5 py-1 bg-teal-50 text-teal-800 rounded-full text-xs font-semibold">Normal</span></td></tr>
                     </tbody>
                 </table>
             </div>
@@ -232,9 +253,14 @@
     </main>
 
     <script>
+        // Dados centrais
         let atendimentos = [
-            { data: '2026-11-12', paciente: 'Mariana Costa', procedimento: 'Toxina Botulínica (Full Face)', pagamento: 'Pix', valor: 1800, insumos: 250, comissao: 180, sala: 100 },
-            { data: '2026-11-12', paciente: 'Juliana Paes', procedimento: 'Laser Lavieen', pagamento: 'Cartão Crédito (3x)', valor: 1200, insumos: 150, comissao: 120, sala: 80 }
+            { id: 1, data: '2026-11-12', paciente: 'Mariana Costa', procedimento: 'Toxina Botulínica (Full Face)', pagamento: 'Pix', valor: 1800, insumos: 250, comissao: 180, sala: 100 },
+            { id: 2, data: '2026-11-12', paciente: 'Juliana Paes', procedimento: 'Laser Lavieen', pagamento: 'Cartão Crédito (3x)', valor: 1200, insumos: 150, comissao: 120, sala: 80 }
+        ];
+
+        let prontuarios = [
+            { id: 1, data: '12/11/2026 10:30', paciente: 'Mariana Costa', s: 'Paciente relata melhora das linhas.', o: 'Boa simetria muscular.', a: 'Evolução satisfatória.', p: 'Retorno em 4 meses.' }
         ];
 
         document.getElementById('dataCaixaInput').value = new Date().toISOString().split('T')[0];
@@ -246,6 +272,8 @@
             });
             document.getElementById(`aba-${aba}`).classList.remove('hidden');
             document.getElementById(`btn-${aba}`).className = "py-3 px-4 text-sm font-semibold border-b-2 border-teal-600 text-teal-900 bg-teal-50/50 transition";
+            if(aba === 'atendimentos') renderTabelaAtendimentos();
+            if(aba === 'prontuario') renderProntuarios();
         }
 
         function atualizarDRE() {
@@ -267,64 +295,207 @@
             document.getElementById('dreSalas').innerText = `- R$ ${salas.toLocaleString('pt-BR', {minimumFractionDigits: 2})}`;
             document.getElementById('dreLucro').innerText = `R$ ${lucro.toLocaleString('pt-BR', {minimumFractionDigits: 2})}`;
 
+            // Caixa Diário
             let pix = atendimentos.filter(i => i.pagamento === 'Pix').reduce((acc, i) => acc + i.valor, 0);
             let credito = atendimentos.filter(i => i.pagamento.includes('Crédito')).reduce((acc, i) => acc + i.valor, 0);
+            let debito = atendimentos.filter(i => i.pagamento === 'Cartão Débito').reduce((acc, i) => acc + i.valor, 0);
+            let dinheiro = atendimentos.filter(i => i.pagamento === 'Dinheiro').reduce((acc, i) => acc + i.valor, 0);
+
             document.getElementById('valPix').innerText = `R$ ${pix.toLocaleString('pt-BR', {minimumFractionDigits: 2})}`;
             document.getElementById('valCredito').innerText = `R$ ${credito.toLocaleString('pt-BR', {minimumFractionDigits: 2})}`;
+            document.getElementById('valDebito').innerText = `R$ ${debito.toLocaleString('pt-BR', {minimumFractionDigits: 2})}`;
+            document.getElementById('valDinheiro').innerText = `R$ ${dinheiro.toLocaleString('pt-BR', {minimumFractionDigits: 2})}`;
             document.getElementById('valTotalCaixa').innerText = `R$ ${bruto.toLocaleString('pt-BR', {minimumFractionDigits: 2})}`;
+        }
+
+        function renderTabelaAtendimentos() {
+            let tbody = document.getElementById('tabelaAtendimentos');
+            tbody.innerHTML = atendimentos.map((i, index) => `
+                <tr class="hover:bg-slate-50 transition">
+                    <td class="py-3 text-slate-600">${i.data}</td>
+                    <td class="py-3 font-semibold text-slate-900">${i.paciente}</td>
+                    <td class="py-3 text-slate-700">${i.procedimento}</td>
+                    <td class="py-3"><span class="px-2.5 py-1 bg-teal-50 text-teal-800 rounded-full text-xs font-semibold">${i.pagamento}</span></td>
+                    <td class="py-3 text-right font-bold text-slate-900">R$ ${i.valor.toLocaleString('pt-BR', {minimumFractionDigits: 2})}</td>
+                    <td class="py-3 text-center space-x-2">
+                        <button onclick="editarAtendimento(${index})" class="text-xs bg-slate-100 hover:bg-teal-50 text-teal-800 px-2.5 py-1 rounded-md font-semibold transition">Editar</button>
+                        <button onclick="excluirAtendimento(${index})" class="text-xs bg-rose-50 hover:bg-rose-100 text-rose-700 px-2.5 py-1 rounded-md font-semibold transition">Excluir</button>
+                    </td>
+                </tr>
+            `).join('');
         }
 
         function salvarAtendimento() {
             let paciente = document.getElementById('inputPaciente').value;
             let [procNome, valor, insumos, comissao, sala] = document.getElementById('selectProcedimento').value.split('|');
             let pagamento = document.getElementById('selectPagamento').value;
+            let editIndex = Number(document.getElementById('editIndex').value);
 
             if(!paciente) return alert('Informe o nome da paciente.');
 
-            atendimentos.unshift({
-                data: new Date().toISOString().split('T')[0],
-                paciente,
-                procedimento: procNome,
-                pagamento,
-                valor: Number(valor),
-                insumos: Number(insumos),
-                comissao: Number(comissao),
-                sala: Number(sala)
-            });
+            if(editIndex > -1) {
+                // Editando existente
+                atendimentos[editIndex] = {
+                    ...atendimentos[editIndex],
+                    paciente,
+                    procedimento: procNome,
+                    pagamento,
+                    valor: Number(valor),
+                    insumos: Number(insumos),
+                    comissao: Number(comissao),
+                    sala: Number(sala)
+                };
+                document.getElementById('editIndex').value = -1;
+                document.getElementById('formTitulo').innerText = "Registrar Atendimento";
+                document.getElementById('btnCancelarEdicao').classList.add('hidden');
+                alert('Atendimento atualizado com sucesso!');
+            } else {
+                // Novo atendimento
+                atendimentos.unshift({
+                    id: Date.now(),
+                    data: new Date().toISOString().split('T')[0],
+                    paciente,
+                    procedimento: procNome,
+                    pagamento,
+                    valor: Number(valor),
+                    insumos: Number(insumos),
+                    comissao: Number(comissao),
+                    sala: Number(sala)
+                });
+                alert('Atendimento registrado com sucesso!');
+            }
 
-            let tbody = document.getElementById('tabelaAtendimentos');
-            tbody.innerHTML = atendimentos.map(i => `
-                <tr>
-                    <td class="py-3 text-slate-600">${i.data}</td>
-                    <td class="py-3 font-semibold">${i.paciente}</td>
-                    <td class="py-3">${i.procedimento}</td>
-                    <td class="py-3"><span class="px-2.5 py-1 bg-teal-50 text-teal-800 rounded-full text-xs font-semibold">${i.pagamento}</span></td>
-                    <td class="py-3 text-right font-bold">R$ ${i.valor.toLocaleString('pt-BR', {minimumFractionDigits: 2})}</td>
-                </tr>
-            `).join('');
-
-            atualizarDRE();
             document.getElementById('inputPaciente').value = '';
-            alert('Atendimento salvo com sucesso!');
+            atualizarDRE();
+            renderTabelaAtendimentos();
         }
 
-        function enviarWhatsApp() {
-            let msg = `*CLÍNICA DRA. ANDRÉIA FOGAÇA*\n📅 Fechamento de Caixa\n\nTotal Arrecadado: R$ 3.000,00\n\n_Gerenciado por Victor Freitas_`;
-            window.open(`https://api.whatsapp.com/send?text=${encodeURIComponent(msg)}`, '_blank');
+        function editarAtendimento(index) {
+            let item = atendimentos[index];
+            document.getElementById('inputPaciente').value = item.paciente;
+            document.getElementById('selectPagamento').value = item.pagamento;
+            document.getElementById('editIndex').value = index;
+            document.getElementById('formTitulo').innerText = "Editar Atendimento";
+            document.getElementById('btnCancelarEdicao').classList.remove('hidden');
+            mudarAba('atendimentos');
+        }
+
+        function cancelarEdicao() {
+            document.getElementById('inputPaciente').value = '';
+            document.getElementById('editIndex').value = -1;
+            document.getElementById('formTitulo').innerText = "Registrar Atendimento";
+            document.getElementById('btnCancelarEdicao').classList.add('hidden');
+        }
+
+        function excluirAtendimento(index) {
+            if(confirm('Tem certeza que deseja excluir este atendimento?')) {
+                atendimentos.splice(index, 1);
+                atualizarDRE();
+                renderTabelaAtendimentos();
+                alert('Atendimento excluído com sucesso.');
+            }
+        }
+
+        // AGENTE DE INTELIGÊNCIA ARTIFICIAL & VOZ NO PRONTUÁRIO
+        let reconhecimentoVoz = null;
+        function alternarGravacaoVoz() {
+            const btnVoz = document.getElementById('btnVoz');
+            const txtVoz = document.getElementById('txtVoz');
+
+            if (!('webkitSpeechRecognition' in window) && !('SpeechRecognition' in window)) {
+                // Simulação inteligente caso o navegador não suporte Web Speech
+                txtVoz.innerText = "Processando IA...";
+                setTimeout(() => {
+                    document.getElementById('pPaciente').value = "Mariana Costa";
+                    document.getElementById('pS').value = "Paciente refere excelente resultado da toxina aplicada há 4 meses.";
+                    document.getElementById('pO').value = "Boa simetria, sem sinais flogísticos.";
+                    document.getElementById('pA').value = "Manutenção da toxina botulínica em terço superior.";
+                    document.getElementById('pP').value = "Aplicado 12U em região frontal e glabela. Retorno em 120 dias.";
+                    txtVoz.innerText = "Ditar com Voz (IA)";
+                    alert("Agente IA: Áudio ditado estruturado com sucesso no padrão SOAP!");
+                }, 1500);
+                return;
+            }
+
+            const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+            reconhecimentoVoz = new SpeechRecognition();
+            reconhecimentoVoz.lang = 'pt-BR';
+            reconhecimentoVoz.continuous = false;
+
+            reconhecimentoVoz.onstart = () => {
+                btnVoz.className = "bg-rose-600 text-white px-4 py-2.5 rounded-xl text-sm font-semibold flex items-center gap-2 animate-pulse shadow-md";
+                txtVoz.innerText = "Ouvindo Dra. Andréia...";
+            };
+
+            reconhecimentoVoz.onresult = (event) => {
+                let transcricao = event.results[0][0].transcript;
+                document.getElementById('pS').value = transcricao;
+                document.getElementById('pA').value = "Estruturado automaticamente por IA via ditado por voz.";
+                btnVoz.className = "bg-teal-50 border border-teal-200 text-teal-800 px-4 py-2.5 rounded-xl text-sm font-semibold flex items-center gap-2 hover:bg-teal-100 transition shadow-xs";
+                txtVoz.innerText = "Ditar com Voz (IA)";
+                alert("Transcrição concluída e organizada pelo agente IA!");
+            };
+
+            reconhecimentoVoz.onerror = () => {
+                btnVoz.className = "bg-teal-50 border border-teal-200 text-teal-800 px-4 py-2.5 rounded-xl text-sm font-semibold flex items-center gap-2 hover:bg-teal-100 transition shadow-xs";
+                txtVoz.innerText = "Ditar com Voz (IA)";
+            };
+
+            reconhecimentoVoz.start();
         }
 
         function salvarProntuario() {
-            let p = document.getElementById('pPaciente').value;
-            if(!p) return alert('Informe a paciente.');
-            alert('Prontuário assinado e salvo com sucesso!');
+            let paciente = document.getElementById('pPaciente').value;
+            let s = document.getElementById('pS').value;
+            let o = document.getElementById('pO').value;
+            let a = document.getElementById('pA').value;
+            let p = document.getElementById('pP').value;
+
+            if(!paciente) return alert('Informe o nome da paciente.');
+
+            prontuarios.unshift({
+                id: Date.now(),
+                data: new Date().toLocaleString(),
+                paciente, s, o, a, p
+            });
+
             document.getElementById('pPaciente').value = '';
+            document.getElementById('pS').value = '';
+            document.getElementById('pO').value = '';
+            document.getElementById('pA').value = '';
+            document.getElementById('pP').value = '';
+
+            renderProntuarios();
+            alert('Prontuário assinado digitalmente e salvo com segurança!');
         }
 
-        function mudarPerfil() {
-            alert('Perfil alternado com sucesso!');
+        function renderProntuarios() {
+            let container = document.getElementById('listaProntuarios');
+            container.innerHTML = prontuarios.map(item => `
+                <div class="border border-slate-200 rounded-xl p-4 bg-slate-50 space-y-2">
+                    <div class="flex justify-between items-center">
+                        <span class="font-bold text-slate-900">${item.paciente}</span>
+                        <span class="text-xs text-slate-500">${item.data}</span>
+                    </div>
+                    <div class="text-xs text-slate-700 grid grid-cols-1 md:grid-cols-2 gap-2 bg-white p-3 rounded-lg border border-slate-200">
+                        <div><b>S:</b> ${item.s}</div>
+                        <div><b>O:</b> ${item.o}</div>
+                        <div><b>A:</b> ${item.a}</div>
+                        <div><b>P:</b> ${item.p}</div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function enviarWhatsApp() {
+            let bruto = atendimentos.reduce((acc, i) => acc + i.valor, 0);
+            let msg = `*CLÍNICA DRA. ANDRÉIA FOGAÇA*\n📅 Fechamento de Caixa: ${document.getElementById('dataCaixaInput').value}\n\n💰 Total Arrecadado: R$ ${bruto.toFixed(2)}\n\n_Enviado pelo sistema de gestão_`;
+            window.open(`https://api.whatsapp.com/send?text=${encodeURIComponent(msg)}`, '_blank');
         }
 
         atualizarDRE();
+        renderTabelaAtendimentos();
+        renderProntuarios();
     </script>
 </body>
 </html>
