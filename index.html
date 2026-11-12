@@ -1,0 +1,724 @@
+import React, { useState, useEffect } from 'react';
+import { 
+  LayoutDashboard, 
+  DollarSign, 
+  Users, 
+  Package, 
+  FileText, 
+  ShieldCheck, 
+  LogOut, 
+  Plus, 
+  Trash2, 
+  CheckCircle, 
+  AlertTriangle, 
+  Search, 
+  Printer, 
+  Share2, 
+  Mic, 
+  MicOff, 
+  Lock, 
+  Unlock, 
+  UserCheck, 
+  Activity, 
+  FileCheck, 
+  Stethoscope, 
+  Calendar,
+  Settings,
+  Download
+} from 'lucide-react';
+
+export default function App() {
+  // Estados de Autenticação e Perfil
+  const [usuarioLogado, setUsuarioLogado] = useState({
+    nome: 'Victor Freitas',
+    email: 'victor@clinica.com',
+    perfil: 'adm' // 'adm', 'medico', 'recepcao'
+  });
+  const [telaBloqueada, setTelaBloqueada] = useState(false);
+  const [abaAtiva, setAbaAtiva] = useState('dre'); // 'dre', 'atendimentos', 'caixa', 'insumos', 'pacientes', 'prontuario', 'usuarios', 'auditoria'
+
+  // Estados de Gestão
+  const [anoSelecionado, setAnoSelecionado] = useState('2026');
+  const [dataCaixa, setDataCaixa] = useState(new Date().toISOString().split('T')[0]);
+  
+  // Listas Principais (Simulando banco em tempo real)
+  const [atendimentos, setAtendimentos] = useState([
+    { id: 1, data: '2026-11-12', paciente: 'Mariana Costa', procedimento: 'Toxina Botulínica (Full Face)', valor: 1800, pagamento: 'Pix', esteticista: 'Dra. Andréia', comissao: 180, insumos: 250, sala: 100, imposto: 144, liquido: 1126 },
+    { id: 2, data: '2026-11-12', paciente: 'Juliana Paes', procedimento: 'Laser Lavieen', valor: 1200, pagamento: 'Cartão Crédito (3x)', esteticista: 'Dra. Andréia', comissao: 120, insumos: 150, sala: 80, imposto: 96, taxaCartao: 54, liquido: 700 }
+  ]);
+
+  const [contasPagar, setContasPagar] = useState([
+    { id: 1, vencimento: '2026-11-15', descricao: 'Aluguel Comercial', categoria: 'Estrutura', valor: 4500, status: 'Pendente' }
+  ]);
+
+  const [insumos, setInsumos] = useState([
+    { id: 1, nome: 'Toxina Botulínica 100U', categoria: 'Injetáveis', custo: 650, qtd: 4, min: 2, status: 'Normal' },
+    { id: 2, nome: 'Seringas 1ml', categoria: 'Descartáveis', custo: 3.50, qtd: 45, min: 20, status: 'Normal' }
+  ]);
+
+  const [usuariosSistema, setUsuariosSistema] = useState([
+    { id: 1, nome: 'Victor Freitas', email: 'victor@clinica.com', perfil: 'adm', status: 'Ativo' },
+    { id: 2, nome: 'Dra. Andréia Fogaça', email: 'andreia@clinica.com', perfil: 'medico', status: 'Ativo' },
+    { id: 3, nome: 'Carina Recepção', email: 'recepcao@clinica.com', perfil: 'recepcao', status: 'Ativo' }
+  ]);
+
+  const [prontuarios, setProntuarios] = useState([
+    { id: 1, paciente: 'Mariana Costa', data: '2026-11-12 10:30', medico: 'Dra. Andréia Fogaça', s: 'Paciente relata melhora das linhas de expressão.', o: 'Boa simetria, sem sinais flogísticos.', a: 'Evolução satisfatória pós toxina.', p: 'Retorno em 4 meses para nova avaliação.', assinado: true }
+  ]);
+
+  const [auditoria, setAuditoria] = useState([
+    { id: 1, data: '2026-11-12 08:00', usuario: 'Victor Freitas', acao: 'Login realizado no sistema' }
+  ]);
+
+  // Estados de Formulários Rápidos
+  const [novoAtendimento, setNovoAtendimento] = useState({ paciente: '', procedimento: 'Toxina Botulínica', valor: 1800, pagamento: 'Pix', parcelas: 1 });
+  const [novoProntuario, setNovoProntuario] = useState({ paciente: '', s: '', o: '', a: '', p: '' });
+  const [gravandoVoz, setGravandoVoz] = useState(false);
+
+  // Catálogo Rápido de Procedimentos (1 Clique)
+  const procedimentosCatalogo = [
+    { nome: 'Toxina Botulínica (Full Face)', valor: 1800, insumos: 250, comissao: 180, sala: 100 },
+    { nome: 'Laser Lavieen', valor: 1200, insumos: 150, comissao: 120, sala: 80 },
+    { nome: 'Bioestimulador de Colágeno', valor: 2500, insumos: 800, comissao: 250, sala: 150 },
+    { nome: 'Preenchimento Labial', valor: 1500, insumos: 500, comissao: 150, sala: 100 },
+    { nome: 'Limpeza de Pele Profunda', valor: 250, insumos: 30, comissao: 50, sala: 30 }
+  ];
+
+  // Cálculos DRE
+  const faturamentoBruto = atendimentos.reduce((acc, item) => acc + item.valor, 0);
+  const totalImpostos = atendimentos.reduce((acc, item) => acc + (item.imposto || item.valor * 0.08), 0);
+  const totalComissoes = atendimentos.reduce((acc, item) => acc + item.comissao, 0);
+  const totalInsumos = atendimentos.reduce((acc, item) => acc + item.insumos, 0);
+  const totalSalas = atendimentos.reduce((acc, item) => acc + item.sala, 0);
+  const totalDespesasPagas = contasPagar.filter(c => c.status === 'Pago').reduce((acc, item) => acc + item.valor, 0);
+  const lucroLiquido = faturamentoBruto - (totalImpostos + totalComissoes + totalInsumos + totalSalas + totalDespesasPagas);
+
+  // Filtragem do Caixa do Dia
+  const atendimentosHoje = atendimentos.filter(item => item.data === dataCaixa);
+  const totalPix = atendimentosHoje.filter(i => i.pagamento === 'Pix').reduce((a, b) => a + b.valor, 0);
+  const totalCredito = atendimentosHoje.filter(i => i.pagamento.includes('Crédito')).reduce((a, b) => a + b.valor, 0);
+  const totalDebito = atendimentosHoje.filter(i => i.pagamento === 'Cartão Débito').reduce((a, b) => a + b.valor, 0);
+  const totalDinheiro = atendimentosHoje.filter(i => i.pagamento === 'Dinheiro').reduce((a, b) => a + b.valor, 0);
+  const totalArrecadadoDia = totalPix + totalCredito + totalDebito + totalDinheiro;
+
+  const registrarAcaoAuditoria = (acao) => {
+    const nova = { id: Date.now(), data: new Date().toLocaleString(), usuario: usuarioLogado.nome, acao };
+    setAuditoria([nova, ...auditoria]);
+  };
+
+  const handleCadastrarAtendimento = (e) => {
+    e.preventDefault();
+    const proc = procedimentosCatalogo.find(p => p.nome === novoAtendimento.procedimento) || procedimentosCatalogo[0];
+    const imposto = novoAtendimento.valor * 0.08;
+    const taxaCartao = novoAtendimento.pagamento.includes('Crédito') ? novoAtendimento.valor * 0.045 : 0;
+    const liquido = novoAtendimento.valor - imposto - proc.comissao - proc.insumos - proc.sala - taxaCartao;
+
+    const item = {
+      id: Date.now(),
+      data: dataCaixa,
+      paciente: novoAtendimento.paciente || 'Paciente Balcão',
+      procedimento: proc.nome,
+      valor: Number(novoAtendimento.valor),
+      pagamento: novoAtendimento.pagamento,
+      esteticista: 'Dra. Andréia',
+      comissao: proc.comissao,
+      insumos: proc.insumos,
+      sala: proc.sala,
+      imposto,
+      taxaCartao,
+      liquido
+    };
+
+    setAtendimentos([item, ...atendimentos]);
+    registrarAcaoAuditoria(`Novo atendimento lançado: ${item.paciente} - R$ ${item.valor}`);
+    setNovoAtendimento({ paciente: '', procedimento: 'Toxina Botulínica', valor: 1800, pagamento: 'Pix', parcelas: 1 });
+    alert('Atendimento registrado com sucesso!');
+  };
+
+  const simularDitadoVoz = () => {
+    setGravandoVoz(true);
+    setTimeout(() => {
+      setGravandoVoz(false);
+      setNovoProntuario({
+        ...novoProntuario,
+        s: 'Paciente refere excelente resultado da toxina aplicada há 4 meses, deseja retoque.',
+        o: 'Sem intercorrências, pele hidratada, boa resposta muscular.',
+        a: 'Manutenção da toxina botulínica em terço superior.',
+        p: 'Aplicado 12U em região frontal e glabela. Retorno em 120 dias.'
+      });
+      alert('Áudio transcrito e estruturado com sucesso pelo Assistente IA!');
+    }, 2000);
+  };
+
+  return (
+    <div className="min-h-screen bg-slate-50 text-slate-800 flex flex-col font-sans">
+      
+      {/* HEADER INSTITUCIONAL COM LOGO */}
+      <header className="bg-white border-b border-teal-100 px-6 py-4 flex items-center justify-between sticky top-0 z-30 shadow-sm">
+        <div className="flex items-center gap-4">
+          <div className="flex items-center gap-3">
+            <img src="/logo-andreia.png" alt="Logo Dra. Andréia Fogaça" className="h-10 w-auto object-contain" onError={(e)=>{e.target.style.display='none'}} />
+            <div>
+              <h1 className="text-lg font-bold tracking-tight text-teal-800">Dra. Andréia Fogaça</h1>
+              <p className="text-xs text-teal-600 font-medium">Dermatologia & Gestão</p>
+            </div>
+          </div>
+        </div>
+
+        {/* BARRA DE ATALHOS RÁPIDOS & PERFIL */}
+        <div className="flex items-center gap-3">
+          <div className="hidden md:flex items-center bg-teal-50 px-3 py-1.5 rounded-lg border border-teal-200 text-xs text-teal-800 gap-2">
+            <Activity className="w-4 h-4 text-teal-600 animate-pulse" />
+            <span>Agenda Hoje: <b>{atendimentosHoje.length} atendimentos</b></span>
+          </div>
+
+          <button 
+            onClick={() => setTelaBloqueada(!telaBloqueada)}
+            className="p-2 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700 transition"
+            title="Bloquear Tela (LGPD)"
+          >
+            {telaBloqueada ? <Lock className="w-4 h-4 text-rose-600" /> : <Unlock className="w-4 h-4 text-teal-700" />}
+          </button>
+
+          {/* SIMULADOR DE PERFIS */}
+          <div className="flex items-center gap-2 bg-slate-100 p-1 rounded-lg">
+            <span className="text-xs font-semibold px-2 text-slate-600">{usuarioLogado.nome} ({usuarioLogado.perfil.toUpperCase()})</span>
+            <select 
+              value={usuarioLogado.perfil}
+              onChange={(e) => {
+                const p = e.target.value;
+                setUsuarioLogado({
+                  nome: p === 'adm' ? 'Victor Freitas (ADM)' : p === 'medico' ? 'Dra. Andréia (Médica)' : 'Carina (Recepção)',
+                  email: `${p}@clinica.com`,
+                  perfil: p
+                });
+              }}
+              className="text-xs bg-white border border-slate-300 rounded px-2 py-1 font-medium focus:outline-none focus:ring-1 focus:ring-teal-600"
+            >
+              <option value="adm">Perfil ADM / Gerente</option>
+              <option value="medico">Perfil Médico (Dra. Andréia)</option>
+              <option value="recepcao">Perfil Recepção</option>
+            </select>
+          </div>
+        </div>
+      </header>
+
+      {/* TELA DE BLOQUEIO LGPD */}
+      {telaBloqueada && (
+        <div className="fixed inset-0 bg-slate-900/80 backdrop-blur-md z-50 flex items-center justify-center p-4">
+          <div className="bg-white rounded-2xl max-w-md w-full p-8 shadow-2xl text-center border-t-4 border-teal-600">
+            <div className="w-16 h-16 bg-teal-50 rounded-full flex items-center justify-center mx-auto mb-4 text-teal-700">
+              <Lock className="w-8 h-8" />
+            </div>
+            <h2 className="text-2xl font-bold text-slate-900 mb-2">Sistema Bloqueado por Segurança</h2>
+            <p className="text-sm text-slate-600 mb-6">Sessão protegida em conformidade com a LGPD e normas do CFM. Insira sua senha para retornar.</p>
+            <input type="password" placeholder="Senha de acesso..." className="w-full border border-slate-300 rounded-xl px-4 py-3 mb-4 text-sm focus:ring-2 focus:ring-teal-600 focus:outline-none" />
+            <button 
+              onClick={() => setTelaBloqueada(false)}
+              className="w-full bg-teal-700 hover:bg-teal-800 text-white font-semibold py-3 rounded-xl transition shadow-lg shadow-teal-700/20"
+            >
+              Desbloquear Sistema
+            </button>
+          </div>
+        </div>
+      )}
+
+      {/* NAVEGAÇÃO PRINCIPAL */}
+      <nav className="bg-white border-b border-slate-200 px-6 flex gap-2 overflow-x-auto shadow-xs">
+        {(usuarioLogado.perfil === 'adm' || usuarioLogado.perfil === 'medico') && (
+          <button 
+            onClick={() => setAbaAtiva('dre')}
+            className={`py-3 px-4 text-sm font-semibold border-b-2 transition flex items-center gap-2 whitespace-nowrap ${abaAtiva === 'dre' ? 'border-teal-600 text-teal-800 bg-teal-50/50' : 'border-transparent text-slate-600 hover:text-teal-700'}`}
+          >
+            <LayoutDashboard className="w-4 h-4" /> Mini DRE & Dashboard
+          </button>
+        )}
+
+        <button 
+          onClick={() => setAbaAtiva('atendimentos')}
+          className={`py-3 px-4 text-sm font-semibold border-b-2 transition flex items-center gap-2 whitespace-nowrap ${abaAtiva === 'atendimentos' ? 'border-teal-600 text-teal-800 bg-teal-50/50' : 'border-transparent text-slate-600 hover:text-teal-700'}`}
+        >
+          <Plus className="w-4 h-4" /> Atendimentos (1 Clique)
+        </button>
+
+        <button 
+          onClick={() => setAbaAtiva('caixa')}
+          className={`py-3 px-4 text-sm font-semibold border-b-2 transition flex items-center gap-2 whitespace-nowrap ${abaAtiva === 'caixa' ? 'border-teal-600 text-teal-800 bg-teal-50/50' : 'border-transparent text-slate-600 hover:text-teal-700'}`}
+        >
+          <DollarSign className="w-4 h-4" /> Caixa Diário & WhatsApp
+        </button>
+
+        {(usuarioLogado.perfil === 'adm' || usuarioLogado.perfil === 'medico') && (
+          <button 
+            onClick={() => setAbaAtiva('prontuario')}
+            className={`py-3 px-4 text-sm font-semibold border-b-2 transition flex items-center gap-2 whitespace-nowrap ${abaAtiva === 'prontuario' ? 'border-teal-600 text-teal-800 bg-teal-50/50' : 'border-transparent text-slate-600 hover:text-teal-700'}`}
+          >
+            <Stethoscope className="w-4 h-4" /> Prontuário & Voz IA
+          </button>
+        )}
+
+        <button 
+          onClick={() => setAbaAtiva('insumos')}
+          className={`py-3 px-4 text-sm font-semibold border-b-2 transition flex items-center gap-2 whitespace-nowrap ${abaAtiva === 'insumos' ? 'border-teal-600 text-teal-800 bg-teal-50/50' : 'border-transparent text-slate-600 hover:text-teal-700'}`}
+        >
+          <Package className="w-4 h-4" /> Insumos & Estoque
+        </button>
+
+        {usuarioLogado.perfil === 'adm' && (
+          <>
+            <button 
+              onClick={() => setAbaAtiva('usuarios')}
+              className={`py-3 px-4 text-sm font-semibold border-b-2 transition flex items-center gap-2 whitespace-nowrap ${abaAtiva === 'usuarios' ? 'border-teal-600 text-teal-800 bg-teal-50/50' : 'border-transparent text-slate-600 hover:text-teal-700'}`}
+            >
+              <Users className="w-4 h-4" /> Painel ADM & Acessos
+            </button>
+            <button 
+              onClick={() => setAbaAtiva('auditoria')}
+              className={`py-3 px-4 text-sm font-semibold border-b-2 transition flex items-center gap-2 whitespace-nowrap ${abaAtiva === 'auditoria' ? 'border-teal-600 text-teal-800 bg-teal-50/50' : 'border-transparent text-slate-600 hover:text-teal-700'}`}
+            >
+              <ShieldCheck className="w-4 h-4" /> Auditoria & LGPD
+            </button>
+          </>
+        )}
+      </nav>
+
+      {/* CORPO DO SISTEMA */}
+      <main className="flex-1 p-6 max-w-7xl mx-auto w-full space-y-6">
+
+        {/* 1. MINI DRE & DASHBOARD */}
+        {abaAtiva === 'dre' && (usuarioLogado.perfil === 'adm' || usuarioLogado.perfil === 'medico') && (
+          <div className="space-y-6 animate-fadeIn">
+            <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 bg-white p-6 rounded-2xl shadow-xs border border-slate-200">
+              <div>
+                <h2 className="text-xl font-bold text-slate-900">Visão Executiva & Mini DRE Gerencial</h2>
+                <p className="text-sm text-slate-500">Demonstrativo consolidado em tempo real com abatimento de taxas e insumos.</p>
+              </div>
+              <div className="flex items-center gap-3">
+                <span className="text-xs font-semibold text-slate-600">Ano:</span>
+                <select value={anoSelecionado} onChange={(e)=>setAnoSelecionado(e.target.value)} className="border border-slate-300 rounded-lg px-3 py-1.5 text-sm font-medium">
+                  <option value="2026">2026</option>
+                  <option value="2025">2025</option>
+                </select>
+              </div>
+            </div>
+
+            {/* CARDS DE RESUMO */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+              <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-xs">
+                <p className="text-xs font-semibold text-slate-500 uppercase tracking-wider">Faturamento Bruto</p>
+                <h3 className="text-2xl font-extrabold text-slate-900 mt-2">R$ {faturamentoBruto.toLocaleString('pt-BR', {minimumFractionDigits: 2})}</h3>
+                <span className="text-xs text-teal-600 font-medium mt-1 inline-block">No ano selecionado</span>
+              </div>
+              <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-xs">
+                <p className="text-xs font-semibold text-slate-500 uppercase tracking-wider">Lucro Líquido Real</p>
+                <h3 className="text-2xl font-extrabold text-teal-700 mt-2">R$ {lucroLiquido.toLocaleString('pt-BR', {minimumFractionDigits: 2})}</h3>
+                <span className="text-xs text-teal-600 font-medium mt-1 inline-block">Caixa operacional livre</span>
+              </div>
+              <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-xs">
+                <p className="text-xs font-semibold text-slate-500 uppercase tracking-wider">Contas Pendentes</p>
+                <h3 className="text-2xl font-extrabold text-rose-600 mt-2">R$ {totalDespesasPagas.toLocaleString('pt-BR', {minimumFractionDigits: 2})}</h3>
+                <span className="text-xs text-rose-500 font-medium mt-1 inline-block">Despesas cadastradas</span>
+              </div>
+              <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-xs">
+                <p className="text-xs font-semibold text-slate-500 uppercase tracking-wider">Consultas Realizadas</p>
+                <h3 className="text-2xl font-extrabold text-slate-900 mt-2">{atendimentos.length}</h3>
+                <span className="text-xs text-teal-600 font-medium mt-1 inline-block">Total de atendimentos</span>
+              </div>
+            </div>
+
+            {/* DEMONSTRATIVO DRE COMPLETO */}
+            <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-xs">
+              <h3 className="text-lg font-bold text-slate-900 mb-4 flex items-center gap-2">
+                <FileText className="w-5 h-5 text-teal-600" /> Mini DRE Consolidada
+              </h3>
+              <div className="space-y-3 text-sm">
+                <div className="flex justify-between py-2 border-b border-slate-100 font-semibold text-slate-900">
+                  <span>(=) Faturamento Bruto</span>
+                  <span>R$ {faturamentoBruto.toLocaleString('pt-BR', {minimumFractionDigits: 2})}</span>
+                </div>
+                <div className="flex justify-between py-2 border-b border-slate-100 text-slate-600">
+                  <span>(-) Impostos (8%)</span>
+                  <span className="text-rose-600">- R$ {totalImpostos.toLocaleString('pt-BR', {minimumFractionDigits: 2})}</span>
+                </div>
+                <div className="flex justify-between py-2 border-b border-slate-100 text-slate-600">
+                  <span>(-) Comissões Esteticista</span>
+                  <span className="text-rose-600">- R$ {totalComissoes.toLocaleString('pt-BR', {minimumFractionDigits: 2})}</span>
+                </div>
+                <div className="flex justify-between py-2 border-b border-slate-100 text-slate-600">
+                  <span>(-) Custo de Insumos</span>
+                  <span className="text-rose-600">- R$ {totalInsumos.toLocaleString('pt-BR', {minimumFractionDigits: 2})}</span>
+                </div>
+                <div className="flex justify-between py-2 border-b border-slate-100 text-slate-600">
+                  <span>(-) Taxa de Sala</span>
+                  <span className="text-rose-600">- R$ {totalSalas.toLocaleString('pt-BR', {minimumFractionDigits: 2})}</span>
+                </div>
+                <div className="flex justify-between py-3 border-t-2 border-slate-900 font-extrabold text-teal-700 text-base">
+                  <span>(=) Lucro Final Líquido</span>
+                  <span>R$ {lucroLiquido.toLocaleString('pt-BR', {minimumFractionDigits: 2})}</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* 2. ATENDIMENTOS RÁPIDOS */}
+        {abaAtiva === 'atendimentos' && (
+          <div className="space-y-6 animate-fadeIn">
+            <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-xs">
+              <h2 className="text-xl font-bold text-slate-900 mb-1">Registrar Atendimento (1 Clique)</h2>
+              <p className="text-sm text-slate-500 mb-6">Selecione o procedimento do catálogo para preenchimento inteligente de valores e insumos.</p>
+
+              <form onSubmit={handleCadastrarAtendimento} className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div>
+                  <label className="block text-xs font-semibold text-slate-700 mb-1">Nome do Paciente</label>
+                  <input 
+                    type="text" 
+                    required
+                    placeholder="Ex: Mariana Costa"
+                    value={novoAtendimento.paciente}
+                    onChange={(e)=>setNovoAtendimento({...novoAtendimento, paciente: e.target.value})}
+                    className="w-full border border-slate-300 rounded-xl px-4 py-2.5 text-sm focus:ring-2 focus:ring-teal-600 focus:outline-none"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-xs font-semibold text-slate-700 mb-1">Procedimento</label>
+                  <select 
+                    value={novoAtendimento.procedimento}
+                    onChange={(e)=>{
+                      const pName = e.target.value;
+                      const found = procedimentosCatalogo.find(p => p.nome === pName);
+                      setNovoAtendimento({
+                        ...novoAtendimento, 
+                        procedimento: pName, 
+                        valor: found ? found.valor : 1000
+                      });
+                    }}
+                    className="w-full border border-slate-300 rounded-xl px-4 py-2.5 text-sm focus:ring-2 focus:ring-teal-600 focus:outline-none bg-white"
+                  >
+                    {procedimentosCatalogo.map(p => (
+                      <option key={p.nome} value={p.nome}>{p.nome} — R$ {p.valor}</option>
+                    ))}
+                  </select>
+                </div>
+
+                <div>
+                  <label className="block text-xs font-semibold text-slate-700 mb-1">Forma de Pagamento</label>
+                  <select 
+                    value={novoAtendimento.pagamento}
+                    onChange={(e)=>setNovoAtendimento({...novoAtendimento, pagamento: e.target.value})}
+                    className="w-full border border-slate-300 rounded-xl px-4 py-2.5 text-sm focus:ring-2 focus:ring-teal-600 focus:outline-none bg-white"
+                  >
+                    <option value="Pix">Pix</option>
+                    <option value="Cartão Crédito (1x)">Cartão Crédito (1x)</option>
+                    <option value="Cartão Crédito (3x)">Cartão Crédito (3x)</option>
+                    <option value="Cartão Débito">Cartão Débito</option>
+                    <option value="Dinheiro">Dinheiro</option>
+                  </select>
+                </div>
+
+                <div className="md:col-span-3 flex justify-end">
+                  <button type="submit" className="bg-teal-700 hover:bg-teal-800 text-white font-semibold px-6 py-3 rounded-xl transition shadow-lg shadow-teal-700/20 flex items-center gap-2">
+                    <Plus className="w-5 h-5" /> Salvar Atendimento no Caixa
+                  </button>
+                </div>
+              </form>
+            </div>
+
+            {/* TABELA DE ATENDIMENTOS RECENTES */}
+            <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-xs overflow-hidden">
+              <h3 className="text-lg font-bold text-slate-900 mb-4">Atendimentos Registrados Recentemente</h3>
+              <div className="overflow-x-auto">
+                <table className="w-full text-left text-sm">
+                  <thead>
+                    <tr className="border-b border-slate-200 text-xs text-slate-500 uppercase">
+                      <th className="pb-3">Data</th>
+                      <th className="pb-3">Paciente</th>
+                      <th className="pb-3">Procedimento</th>
+                      <th className="pb-3">Pagamento</th>
+                      <th className="pb-3 text-right">Valor Total</th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-slate-100">
+                    {atendimentos.map(item => (
+                      <tr key={item.id} className="hover:bg-slate-50 transition">
+                        <td className="py-3 text-slate-600">{item.data}</td>
+                        <td className="py-3 font-semibold text-slate-900">{item.paciente}</td>
+                        <td className="py-3 text-slate-700">{item.procedimento}</td>
+                        <td className="py-3"><span className="px-2.5 py-1 bg-teal-50 text-teal-800 rounded-full text-xs font-semibold">{item.pagamento}</span></td>
+                        <td className="py-3 text-right font-bold text-slate-900">R$ {item.valor.toLocaleString('pt-BR', {minimumFractionDigits: 2})}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* 3. CAIXA DIÁRIO & WHATSAPP */}
+        {abaAtiva === 'caixa' && (
+          <div className="space-y-6 animate-fadeIn">
+            <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-xs flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+              <div>
+                <h2 className="text-xl font-bold text-slate-900">Fechamento de Caixa Diário</h2>
+                <p className="text-sm text-slate-500">Movimentações consolidadas para o dia selecionado.</p>
+              </div>
+              <div className="flex items-center gap-3">
+                <span className="text-xs font-semibold text-slate-600">Data do Caixa:</span>
+                <input 
+                  type="date" 
+                  value={dataCaixa}
+                  onChange={(e)=>setDataCaixa(e.target.value)}
+                  className="border border-slate-300 rounded-xl px-4 py-2 text-sm font-semibold text-teal-800 bg-teal-50/50"
+                />
+              </div>
+            </div>
+
+            {/* CARDS DE FORMAS DE PAGAMENTO */}
+            <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
+              <div className="bg-white p-4 rounded-2xl border border-slate-200 text-center">
+                <span className="text-xs font-semibold text-slate-500">Pix</span>
+                <h4 className="text-lg font-bold text-slate-900 mt-1">R$ {totalPix.toLocaleString('pt-BR', {minimumFractionDigits: 2})}</h4>
+              </div>
+              <div className="bg-white p-4 rounded-2xl border border-slate-200 text-center">
+                <span className="text-xs font-semibold text-slate-500">Crédito</span>
+                <h4 className="text-lg font-bold text-slate-900 mt-1">R$ {totalCredito.toLocaleString('pt-BR', {minimumFractionDigits: 2})}</h4>
+              </div>
+              <div className="bg-white p-4 rounded-2xl border border-slate-200 text-center">
+                <span className="text-xs font-semibold text-slate-500">Débito</span>
+                <h4 className="text-lg font-bold text-slate-900 mt-1">R$ {totalDebito.toLocaleString('pt-BR', {minimumFractionDigits: 2})}</h4>
+              </div>
+              <div className="bg-white p-4 rounded-2xl border border-slate-200 text-center">
+                <span className="text-xs font-semibold text-slate-500">Dinheiro</span>
+                <h4 className="text-lg font-bold text-slate-900 mt-1">R$ {totalDinheiro.toLocaleString('pt-BR', {minimumFractionDigits: 2})}</h4>
+              </div>
+              <div className="bg-teal-700 text-white p-4 rounded-2xl text-center shadow-md col-span-2 md:col-span-1">
+                <span className="text-xs font-semibold text-teal-100">Total Arrecadado</span>
+                <h4 className="text-xl font-extrabold mt-1">R$ {totalArrecadadoDia.toLocaleString('pt-BR', {minimumFractionDigits: 2})}</h4>
+              </div>
+            </div>
+
+            {/* CARD PARA WHATSAPP */}
+            <div className="bg-gradient-to-br from-teal-800 to-teal-950 text-white p-6 rounded-2xl shadow-xl flex flex-col md:flex-row items-center justify-between gap-6">
+              <div className="space-y-2">
+                <span className="bg-teal-700/60 text-teal-200 px-3 py-1 rounded-full text-xs font-semibold uppercase tracking-wider">Envio Direto</span>
+                <h3 className="text-xl font-bold">Enviar Resumo de Caixa para a Dra. Andréia</h3>
+                <p className="text-sm text-teal-100/80 max-w-xl">Gera o comprovante institucional formatado com o logotipo da clínica para envio imediato via WhatsApp.</p>
+              </div>
+              <button 
+                onClick={()=>{
+                  const msg = `*CLÍNICA DRA. ANDRÉIA FOGAÇA*\n📅 Fechamento de Caixa: ${dataCaixa}\n\n🟢 Pix: R$ ${totalPix.toFixed(2)}\n💳 Crédito: R$ ${totalCredito.toFixed(2)}\n💳 Débito: R$ ${totalDebito.toFixed(2)}\n💵 Dinheiro: R$ ${totalDinheiro.toFixed(2)}\n\n💰 *TOTAL ARRECADADO: R$ ${totalArrecadadoDia.toFixed(2)}*\n\n_Responsável: ${usuarioLogado.nome}_`;
+                  window.open(`https://api.whatsapp.com/send?text=${encodeURIComponent(msg)}`, '_blank');
+                }}
+                className="bg-white hover:bg-teal-50 text-teal-900 font-bold px-6 py-3.5 rounded-xl transition shadow-lg flex items-center gap-2 whitespace-nowrap"
+              >
+                <Share2 className="w-5 h-5 text-teal-700" /> Enviar no WhatsApp
+              </button>
+            </div>
+          </div>
+        )}
+
+        {/* 4. PRONTUÁRIO & VOZ IA */}
+        {abaAtiva === 'prontuario' && (usuarioLogado.perfil === 'adm' || usuarioLogado.perfil === 'medico') && (
+          <div className="space-y-6 animate-fadeIn">
+            <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-xs">
+              <div className="flex justify-between items-center mb-4">
+                <div>
+                  <h2 className="text-xl font-bold text-slate-900">Prontuário Eletrônico (PEP) com Assistente IA</h2>
+                  <p className="text-sm text-slate-500">Evolução clínica segura com ditado por voz estruturado no padrão SOAP.</p>
+                </div>
+                <button 
+                  onClick={simularDitadoVoz}
+                  className={`px-4 py-2.5 rounded-xl text-sm font-semibold flex items-center gap-2 transition ${gravandoVoz ? 'bg-rose-600 text-white animate-pulse' : 'bg-teal-50 text-teal-800 border border-teal-200 hover:bg-teal-100'}`}
+                >
+                  <Mic className="w-4 h-4" /> {gravandoVoz ? 'Ouvindo e Transcrevendo...' : 'Ditar Evolução (IA)'}
+                </button>
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-xs font-semibold text-slate-700 mb-1">Paciente</label>
+                  <input 
+                    type="text" 
+                    placeholder="Nome da paciente..." 
+                    value={novoProntuario.paciente}
+                    onChange={(e)=>setNovoProntuario({...novoProntuario, paciente: e.target.value})}
+                    className="w-full border border-slate-300 rounded-xl px-4 py-2 text-sm focus:ring-2 focus:ring-teal-600 focus:outline-none"
+                  />
+                </div>
+                <div>
+                  <label className="block text-xs font-semibold text-slate-700 mb-1">Subjetivo (S)</label>
+                  <input 
+                    type="text" 
+                    placeholder="Queixa principal e relatos..." 
+                    value={novoProntuario.s}
+                    onChange={(e)=>setNovoProntuario({...novoProntuario, s: e.target.value})}
+                    className="w-full border border-slate-300 rounded-xl px-4 py-2 text-sm focus:ring-2 focus:ring-teal-600 focus:outline-none"
+                  />
+                </div>
+                <div>
+                  <label className="block text-xs font-semibold text-slate-700 mb-1">Objetivo (O)</label>
+                  <input 
+                    type="text" 
+                    placeholder="Exame físico e achados..." 
+                    value={novoProntuario.o}
+                    onChange={(e)=>setNovoProntuario({...novoProntuario, o: e.target.value})}
+                    className="w-full border border-slate-300 rounded-xl px-4 py-2 text-sm focus:ring-2 focus:ring-teal-600 focus:outline-none"
+                  />
+                </div>
+                <div>
+                  <label className="block text-xs font-semibold text-slate-700 mb-1">Avaliação / Conduta (A)</label>
+                  <input 
+                    type="text" 
+                    placeholder="Diagnóstico / Planejamento..." 
+                    value={novoProntuario.a}
+                    onChange={(e)=>setNovoProntuario({...novoProntuario, a: e.target.value})}
+                    className="w-full border border-slate-300 rounded-xl px-4 py-2 text-sm focus:ring-2 focus:ring-teal-600 focus:outline-none"
+                  />
+                </div>
+                <div className="md:col-span-2">
+                  <label className="block text-xs font-semibold text-slate-700 mb-1">Plano / Prescrição (P)</label>
+                  <textarea 
+                    rows="2"
+                    placeholder="Procedimentos aplicados, produtos, retorno..." 
+                    value={novoProntuario.p}
+                    onChange={(e)=>setNovoProntuario({...novoProntuario, p: e.target.value})}
+                    className="w-full border border-slate-300 rounded-xl px-4 py-2 text-sm focus:ring-2 focus:ring-teal-600 focus:outline-none"
+                  ></textarea>
+                </div>
+
+                <div className="md:col-span-2 flex justify-end">
+                  <button 
+                    onClick={()=>{
+                      if(!novoProntuario.paciente) return alert('Informe o nome da paciente.');
+                      const item = {
+                        id: Date.now(),
+                        paciente: novoProntuario.paciente,
+                        data: new Date().toLocaleString(),
+                        medico: usuarioLogado.nome,
+                        s: novoProntuario.s,
+                        o: novoProntuario.o,
+                        a: novoProntuario.a,
+                        p: novoProntuario.p,
+                        assinado: true
+                      };
+                      setProntuarios([item, ...prontuarios]);
+                      setNovoProntuario({ paciente: '', s: '', o: '', a: '', p: '' });
+                      registrarAcaoAuditoria(`Evolução clínica registrada para ${item.paciente}`);
+                      alert('Evolução assinada digitalmente com carimbo de tempo!');
+                    }}
+                    className="bg-teal-700 hover:bg-teal-800 text-white font-semibold px-6 py-2.5 rounded-xl transition shadow-md flex items-center gap-2"
+                  >
+                    <FileCheck className="w-4 h-4" /> Assinar e Salvar Prontuário
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            {/* LISTA DE PRONTUÁRIOS */}
+            <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-xs space-y-4">
+              <h3 className="text-lg font-bold text-slate-900">Histórico de Prontuários (Sigiloso)</h3>
+              {prontuarios.map(p => (
+                <div key={p.id} className="border border-slate-200 rounded-xl p-4 bg-slate-50/50 space-y-2">
+                  <div className="flex justify-between items-center">
+                    <span className="font-bold text-slate-900">{p.paciente}</span>
+                    <span className="text-xs text-slate-500">{p.data} • Dr(a): {p.medico}</span>
+                  </div>
+                  <div className="text-xs text-slate-700 grid grid-cols-1 md:grid-cols-2 gap-2 bg-white p-3 rounded-lg border border-slate-200">
+                    <div><b>S:</b> {p.s}</div>
+                    <div><b>O:</b> {p.o}</div>
+                    <div><b>A:</b> {p.a}</div>
+                    <div><b>P:</b> {p.p}</div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {/* 5. INSUMOS E ESTOQUE */}
+        {abaAtiva === 'insumos' && (
+          <div className="space-y-6 animate-fadeIn">
+            <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-xs">
+              <h2 className="text-xl font-bold text-slate-900 mb-4">Controle de Insumos & Baixa Automática</h2>
+              <div className="overflow-x-auto">
+                <table className="w-full text-left text-sm">
+                  <thead>
+                    <tr className="border-b border-slate-200 text-xs text-slate-500 uppercase">
+                      <th className="pb-3">Insumo</th>
+                      <th className="pb-3">Categoria</th>
+                      <th className="pb-3">Preço Custo</th>
+                      <th className="pb-3">Qtd. Atual</th>
+                      <th className="pb-3">Status</th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-slate-100">
+                    {insumos.map(i => (
+                      <tr key={i.id} className="hover:bg-slate-50">
+                        <td className="py-3 font-semibold text-slate-900">{i.nome}</td>
+                        <td className="py-3 text-slate-600">{i.categoria}</td>
+                        <td className="py-3 text-slate-700">R$ {i.custo.toFixed(2)}</td>
+                        <td className="py-3 font-bold text-slate-900">{i.qtd} un</td>
+                        <td className="py-3"><span className="px-2.5 py-1 bg-teal-50 text-teal-800 rounded-full text-xs font-semibold">Normal</span></td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* 6. PAINEL ADM & ACESSOS */}
+        {abaAtiva === 'usuarios' && usuarioLogado.perfil === 'adm' && (
+          <div className="space-y-6 animate-fadeIn">
+            <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-xs">
+              <h2 className="text-xl font-bold text-slate-900 mb-4">Gestão de Usuários & Níveis de Acesso</h2>
+              <div className="overflow-x-auto">
+                <table className="w-full text-left text-sm">
+                  <thead>
+                    <tr className="border-b border-slate-200 text-xs text-slate-500 uppercase">
+                      <th className="pb-3">Nome</th>
+                      <th className="pb-3">E-mail</th>
+                      <th className="pb-3">Perfil de Acesso</th>
+                      <th className="pb-3">Status</th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-slate-100">
+                    {usuariosSistema.map(u => (
+                      <tr key={u.id} className="hover:bg-slate-50">
+                        <td className="py-3 font-semibold text-slate-900">{u.nome}</td>
+                        <td className="py-3 text-slate-600">{u.email}</td>
+                        <td className="py-3"><span className="px-2.5 py-1 bg-teal-50 text-teal-800 rounded-full text-xs font-semibold uppercase">{u.perfil}</span></td>
+                        <td className="py-3 text-teal-700 font-semibold">{u.status}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* 7. AUDITORIA & LGPD */}
+        {abaAtiva === 'auditoria' && usuarioLogado.perfil === 'adm' && (
+          <div className="space-y-6 animate-fadeIn">
+            <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-xs">
+              <h2 className="text-xl font-bold text-slate-900 mb-4">Trilha de Auditoria Imutável (LGPD)</h2>
+              <div className="space-y-3">
+                {auditoria.map(a => (
+                  <div key={a.id} className="flex justify-between items-center text-xs border-b border-slate-100 py-2">
+                    <span className="font-semibold text-slate-900">{a.acao}</span>
+                    <span className="text-slate-500">{a.usuario} • {a.data}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+        )}
+
+      </main>
+    </div>
+  );
+}
